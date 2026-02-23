@@ -1,23 +1,743 @@
 {
   "skills": [
     {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842104089
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842104090
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842104090
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842125776
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842125777
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842125777
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842224279
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842224279
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842224280
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842245999
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842246000
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842246000
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842267663
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842267663
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842267664
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842289553
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842289553
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842289553
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842311228
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842311229
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842311229
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842333168
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842333169
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842333169
+    },
+    {
       "name": "Whale Shield",
-      "description": "Tightened top holder limit to 30% after 3 whale-caused losses. Avg losing top1: 42%.",
+      "description": "Tightened top holder limit to 30% after 2 whale-caused losses. Avg losing top1: 44%.",
       "data": {
         "maxTop1Pct": 30,
-        "lossCount": 3,
-        "avgTop1": 41.812920589549805
+        "lossCount": 2,
+        "avgTop1": 44.008277789708714
       },
-      "time": 1771824030366
+      "time": 1771842337588
     },
     {
       "name": "Distribution Filter",
       "description": "Tightened top5 holder limit to 60% after repeated concentrated dumps.",
       "data": {
         "maxTop5Pct": 60,
-        "lossCount": 3
+        "lossCount": 2
       },
-      "time": 1771824030367
+      "time": 1771842337588
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842355139
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842355139
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842355140
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842376870
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842376871
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842376871
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842398593
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842398593
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842398594
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842420625
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842420625
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842420626
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842442470
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842442471
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842442471
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842464344
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842464345
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842464345
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842486075
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842486076
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842486076
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 33% vs 20%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "33",
+        "noMetaWR": "20",
+        "multiplier": 1.5
+      },
+      "time": 1771842507902
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 3L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 3,
+        "lowScoreWins": 0
+      },
+      "time": 1771842507902
+    },
+    {
+      "name": "Rug Creator Blacklist",
+      "description": "Tracking 2 wallets that created tokens resulting in losses. Auto-reject any new token from these creators.",
+      "data": {
+        "count": 2,
+        "patterns": [
+          {
+            "creator": "9PRMyufx3FSZX6VmkLKY4yRidyZgo3TajX5wELi5CCme",
+            "symbol": "Lovecoin",
+            "top1Pct": 19.34140739797409,
+            "mcap": 272138.5780289986,
+            "holdMin": 0.8447,
+            "loss": -0.005612644
+          },
+          {
+            "creator": "9Zu8AigeXgFAajBTni2VWw6Wmz7XxDqHmY5nQwdCWAyY",
+            "symbol": "MOSS",
+            "top1Pct": 15.69213391130776,
+            "mcap": 762640.1658964376,
+            "holdMin": 6.278083333333333,
+            "loss": -0.0063606650000000015
+          }
+        ]
+      },
+      "time": 1771842507903
     }
   ]
 }

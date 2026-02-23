@@ -71,3 +71,10 @@ export async function logSkill(skill) {
     await sql`INSERT INTO sharkd_skills (name, description, data) VALUES (${skill.name}, ${skill.description || ''}, ${JSON.stringify(skill)})`;
   } catch (e) { console.error('[DB] skill error:', e.message); }
 }
+
+export async function getState(key) {
+  try {
+    const rows = await sql`SELECT value FROM sharkd_state WHERE key = ${key}`;
+    return rows.length ? rows[0].value : null;
+  } catch (e) { console.error('[DB] getState error:', e.message); return null; }
+}

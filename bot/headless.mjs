@@ -10,7 +10,7 @@ import bs58 from 'bs58';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initDB, logThought, logTrade as dbLogTrade, updateState, logSkill as dbLogSkill } from './db.mjs';
+import { initDB, logThought, logTrade as dbLogTrade, updateState, logSkill as dbLogSkill, getState } from './db.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RPC = process.env.RPC_URL;
@@ -52,7 +52,7 @@ const BOND_MAX_BUY = 0.10;
 const BOND_MIN_BONDING_PCT = 60;  // only buy 60%+ bonded (close to graduation)
 const BOND_MIN_REPLIES = 8;
 
-const MAX_POSITIONS = 1;       // ONE AT A TIME — buy, sell, move on
+const MAX_POSITIONS = 3;       // Allow multiple — hold slow movers while hunting new ones
 const CYCLE_MS = 20_000;       // scan every 20s — faster cycles
 const MIN_SCORE = 5;
 
@@ -61,9 +61,36 @@ const MIN_SCORE = 5;
 // ══════════════════════════════════════════════════════════════
 
 const positions = new Map();    // mint → position data
-const exitedMints = new Set();  // never re-enter
+const exitedMints = new Set();  // never re-enter — persisted to DB
 const failedMints = new Set();  // skip broken tokens
-const rugCreators = new Set();  // track rug creators
+const rugCreators = new Set();  // track rug creators — persisted to DB
+
+// Persist exitedMints + rugCreators to DB (survives restarts)
+async function persistMemory() {
+  try {
+    // Only keep last 500 exited mints to avoid bloat
+    const mints = [...exitedMints].slice(-500);
+    await updateState('exitedMints', mints);
+    await updateState('rugCreators', [...rugCreators]);
+  } catch {}
+}
+
+async function loadMemory() {
+  try {
+    const mints = await getState('exitedMints');
+    if (Array.isArray(mints)) {
+      mints.forEach(m => exitedMints.add(m));
+      console.log(`[MEMORY] Loaded ${mints.length} exited mints (won't re-buy)`);
+    }
+    const rugs = await getState('rugCreators');
+    if (Array.isArray(rugs)) {
+      rugs.forEach(r => rugCreators.add(r));
+      console.log(`[MEMORY] Loaded ${rugs.length} blacklisted creators`);
+    }
+  } catch (e) {
+    console.log(`[MEMORY] Load failed: ${e.message}`);
+  }
+}
 let wins = 0, losses = 0, totalPnl = 0, cycle = 0;
 
 // ══════════════════════════════════════════════════════════════
@@ -322,6 +349,40 @@ async function fetchBonding() {
 
 const STOP_WORDS = new Set(['the','of','a','to','in','is','and','for','on','it','ai','sol','token','coin','inu','doge','pepe','pump','fun','meme','moon','rocket','diamond','hands','based','chad','gm','wagmi','lol','wtf','bruh','my','we','no','do','go','so','up','be','by','at','if']);
 
+// ── COPYCAT / BOTTED TOKEN DETECTION ──
+// Famous token names that get cloned constantly — always botted
+const COPYCAT_NAMES = new Set([
+  'trump','trump47','melania','barron','ivanka','biden','obama','elon','musk',
+  'doge','shib','bonk','wif','popcat','bome','myro','wen','jup','jto',
+  'render','pyth','tensor','raydium','marinade','orca','drift',
+  'bitcoin','btc','ethereum','eth','solana',
+  'grok','openai','chatgpt','gemini','claude',
+  'apple','google','meta','nvidia','tesla','microsoft',
+]);
+
+function isCopycat(token) {
+  const name = (token.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const symbol = (token.symbol || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  for (const copy of COPYCAT_NAMES) {
+    if (name === copy || symbol === copy || name.includes(copy) || symbol.includes(copy)) return true;
+  }
+  return false;
+}
+
+function isBotted(token) {
+  const replies = token.reply_count || 0;
+  const mcap = token.usd_market_cap || 0;
+  const holders = 20; // we check later but for now use default
+
+  // Extremely high replies relative to mcap = botted engagement
+  // Organic: ~1 reply per $1-5K mcap. Botted: 100+ replies on <$100K
+  if (mcap > 0 && mcap < 100000 && replies > mcap / 200) return 'reply/mcap ratio suspicious';
+  if (mcap > 0 && mcap < 50000 && replies > 100) return 'too many replies for mcap';
+  if (replies > 500 && mcap < 500000) return 'extreme reply count for mcap';
+
+  return false;
+}
+
 function detectNarratives(tokens) {
   const wordCount = {};
   const wordTokens = {};
@@ -378,6 +439,9 @@ function scoreToken(token, narratives) {
   if (token.creator && rugCreators.has(token.creator)) return { score: -1, reasons: ['known rugger creator'] };
   if (lastTradeAgo > 30) return { score: -1, reasons: [`dead — no trades in ${lastTradeAgo.toFixed(0)}min`] };
   if (mcap < 1000) return { score: -1, reasons: ['mcap too low'] };
+  if (isCopycat(token)) return { score: -1, reasons: [`copycat name "${token.symbol}" — always botted`] };
+  const bottedReason = isBotted(token);
+  if (bottedReason) return { score: -1, reasons: [`botted: ${bottedReason} (${replies} replies, $${(mcap/1000).toFixed(0)}K mcap)`] };
 
   if (isBonding) {
     // ── BONDING CURVE SCORING ──
@@ -412,8 +476,9 @@ function scoreToken(token, narratives) {
     else if (mcap > 100000 && mcap <= 500000) { score += 2; reasons.push(`mid mcap: $${(mcap / 1000).toFixed(0)}K`); }
     else if (mcap > 1000000) { score += 1; reasons.push(`large mcap: $${(mcap / 1000000).toFixed(2)}M`); }
 
-    if (replies >= 15) { score += 1; reasons.push(`${replies} replies`); }
-    if (replies >= 50) { score += 1; reasons.push('high engagement'); }
+    if (replies >= 15 && replies <= 200) { score += 1; reasons.push(`${replies} replies`); }
+    if (replies >= 50 && replies <= 200) { score += 1; reasons.push('high engagement'); }
+    if (replies > 200) { score -= 1; risks.push(`${replies} replies — likely botted`); }
 
     reasons.unshift('[GRADUATED]');
   }
@@ -469,19 +534,63 @@ async function analyzeHolders(mint, symbol) {
 // POSITION SIZING — scales with win rate (proven in Crubs)
 // ══════════════════════════════════════════════════════════════
 
-function getBuyAmount(isBonding) {
+function getBuyAmount(isBonding, score = 0, holderData = null, mcap = 0) {
+  const balance = lastKnownBalance || 5;
+
+  // ── MCAP-BASED TIERS ──
+  // Lower mcap = higher risk = smaller bet. Higher mcap = more liquidity = safer to size up.
+  // Bonding curve tokens always get minimum sizing (pre-graduation = max risk).
+  let mcapMultiplier;
+  if (isBonding) {
+    mcapMultiplier = 0.004;  // 0.4% of balance — bonding = max risk
+  } else if (mcap < 10_000) {
+    mcapMultiplier = 0.004;  // micro cap — dust bet
+  } else if (mcap < 30_000) {
+    mcapMultiplier = 0.005;  // small cap
+  } else if (mcap < 100_000) {
+    mcapMultiplier = 0.007;  // sweet spot
+  } else if (mcap < 300_000) {
+    mcapMultiplier = 0.010;  // mid cap
+  } else if (mcap < 1_000_000) {
+    mcapMultiplier = 0.014;  // large cap
+  } else {
+    mcapMultiplier = 0.018;  // mega cap — max liquidity
+  }
+
+  let amount = balance * mcapMultiplier;
+
+  // ── SCORE ADJUSTMENT ──
+  // High score boosts by up to 50%, low score cuts by up to 30%
+  const scoreNorm = Math.min(Math.max((score - MIN_SCORE) / 10, 0), 1); // 0-1
+  amount *= (0.8 + scoreNorm * 0.4); // range: 0.8x to 1.2x
+
+  // ── HOLDER QUALITY ADJUSTMENT ──
+  if (holderData) {
+    if (holderData.top1Pct < 15 && holderData.holderCount >= 15) amount *= 1.1;
+    else if (holderData.top1Pct > 35) amount *= 0.6;
+  }
+
+  // ── WIN RATE ADJUSTMENT ──
+  const total = wins + losses;
+  if (total >= 10) {
+    const wr = wins / total;
+    if (wr < 0.4) amount *= 0.7;       // losing — scale down
+    else if (wr > 0.6) amount *= 1.15; // winning — slight scale up
+  }
+
+  // ── HARD LIMITS ──
   const base = isBonding ? BOND_BASE_BUY : GRAD_BASE_BUY;
   const max = isBonding ? BOND_MAX_BUY : GRAD_MAX_BUY;
-  const total = wins + losses;
-  if (total < 5) return base;
-  const wr = wins / total;
-  const range = max - base;
-  if (wr >= 0.7 && total >= 20) return max;
-  if (wr >= 0.6 && total >= 15) return Math.round((base + range * 0.7) * 100) / 100;
-  if (wr >= 0.5 && total >= 10) return Math.round((base + range * 0.4) * 100) / 100;
-  if (wr >= 0.4 && total >= 5) return Math.round((base + range * 0.15) * 100) / 100;
-  return base;
+  const balanceCap = balance * 0.04; // never more than 4% of balance
+
+  amount = Math.round(amount * 1000) / 1000;
+  amount = Math.min(amount, max, balanceCap);
+  amount = Math.max(amount, base);
+
+  return amount;
 }
+
+let lastKnownBalance = 0;
 
 // ══════════════════════════════════════════════════════════════
 // EXECUTION — PumpPortal (bonding) + Jupiter (graduated)
@@ -577,7 +686,7 @@ async function executeBuy(token) {
   const mint = token.mint;
   const symbol = token.symbol || '???';
   const isBonding = token._type === 'bonding';
-  const amount = getBuyAmount(isBonding);
+  const amount = getBuyAmount(isBonding, token._score?.score || 0, token._holderData || null, token.usd_market_cap || 0);
   const label = isBonding ? 'BONDING' : 'PUMPSWAP';
 
   const balance = await getBalance();
@@ -586,7 +695,8 @@ async function executeBuy(token) {
     return false;
   }
 
-  log('BUY', `$${symbol} [${label}] — ${amount} SOL | score ${token._score?.score || '?'}/10`);
+  const mcapStr = token.usd_market_cap ? `$${(token.usd_market_cap/1000).toFixed(0)}K` : '?';
+  log('BUY', `$${symbol} [${label}] — ${amount} SOL | score ${token._score?.score || '?'} | mcap ${mcapStr}`);
 
   try {
     let sig;
@@ -632,35 +742,53 @@ async function executeSell(mint, reason) {
   const pos = positions.get(mint);
   if (!pos) return;
 
-  const { base } = await getTokenBalance(mint);
+  let { base } = await getTokenBalance(mint);
   if (base === 0n) { positions.delete(mint); exitedMints.add(mint); return; }
 
+  // ── PERSISTENT SELL — keep trying until token balance is 0 ──
+  const MAX_ROUNDS = 5;       // 5 rounds of 3 attempts each = 15 total attempts
   let confirmed = false;
   let sig;
+  let round = 0;
 
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const { base: freshBal } = await getTokenBalance(mint);
-      if (freshBal === 0n) { confirmed = true; break; }
+  while (round < MAX_ROUNDS) {
+    round++;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const { base: freshBal, ui: freshUi } = await getTokenBalance(mint);
+        if (freshBal === 0n) { confirmed = true; break; }
 
-      if (pos.isBonding) {
-        sig = await sellViaPumpPortal(mint, pos.uiTokens || Number(freshBal));
-      } else {
-        const slippage = 1000 + attempt * 500;  // 1500, 2000, 2500
-        sig = await sellViaJupiter(mint, freshBal.toString(), slippage);
+        if (pos.isBonding) {
+          sig = await sellViaPumpPortal(mint, freshUi || Number(freshBal));
+        } else {
+          const slippage = 1000 + (round * 500) + (attempt * 500);  // escalate: 2000 → 5000bps
+          sig = await sellViaJupiter(mint, freshBal.toString(), slippage);
+        }
+
+        log('SELL', `Round ${round} attempt ${attempt} TX: ${sig} (slippage ${1000 + (round * 500) + (attempt * 500)}bps)`);
+        confirmed = await confirmTx(sig, 30000);
+        if (confirmed) break;
+      } catch (e) {
+        log('SELL', `Round ${round} attempt ${attempt} error: ${e.message}`);
+        await sleep(2000);
       }
-
-      log('SELL', `Attempt ${attempt} TX: ${sig}`);
-      confirmed = await confirmTx(sig, 30000);
-      if (confirmed) break;
-    } catch (e) {
-      log('SELL', `Attempt ${attempt} error: ${e.message}`);
-      await sleep(2000);
     }
+
+    if (confirmed) break;
+
+    // Check if token actually sold despite no confirmation
+    const { base: checkBal } = await getTokenBalance(mint);
+    if (checkBal === 0n) { confirmed = true; break; }
+
+    log('SELL', `Round ${round}/${MAX_ROUNDS} failed for $${pos.symbol}. ${checkBal.toString()} tokens remaining. Retrying in 5s...`);
+    await sleep(5000);
   }
 
-  if (!confirmed) {
-    log('SELL', `FAILED to sell $${pos.symbol} after 3 attempts`);
+  // Final check — did it actually sell?
+  const { base: finalBal } = await getTokenBalance(mint);
+  if (finalBal > 0n) {
+    log('SELL', `STILL HOLDING $${pos.symbol} after ${MAX_ROUNDS} rounds (${finalBal.toString()} tokens). Will retry next cycle.`);
+    pos._sellPending = true;  // flag for retry on next checkPositions cycle
     return;
   }
 
@@ -674,7 +802,10 @@ async function executeSell(mint, reason) {
 
   const pnlSol = currentSol - pos.buySol;
   const pnlPct = ((currentSol - pos.buySol) / pos.buySol) * 100;
-  if (pnlSol >= 0) wins++; else losses++;
+  // Only count as win/loss if material (>1% move). Dust stale cuts are neutral.
+  if (Math.abs(pnlPct) > 1) {
+    if (pnlSol >= 0) wins++; else losses++;
+  }
   totalPnl += pnlSol;
 
   // Track rug creators + rug patterns
@@ -689,6 +820,7 @@ async function executeSell(mint, reason) {
 
   positions.delete(mint);
   exitedMints.add(mint);
+  persistMemory().catch(() => {}); // persist to DB so we remember across restarts
 
   const bal = await getBalance();
   const result = pnlSol >= 0 ? 'win' : 'loss';
@@ -730,6 +862,13 @@ async function checkPositions() {
       pos.tokens = base.toString();
       pos.uiTokens = ui;
 
+      // Retry pending sells immediately
+      if (pos._sellPending) {
+        log('SELL', `Retrying pending sell for $${pos.symbol}...`);
+        await executeSell(mint, 'retry pending sell');
+        continue;
+      }
+
       // Price via Jupiter
       let currentSol;
       try {
@@ -756,13 +895,30 @@ async function checkPositions() {
       const isDumping = momentum < -5;
       const isFlat = Math.abs(momentum) < 1;
 
-      // Dynamic stale timeout
-      let staleMin = STALE_MAX;
-      if (isDumping) staleMin = STALE_MIN;
-      else if (isFlat && pnlPct < 0) staleMin = (STALE_MIN + STALE_MAX) / 2;
-      else if (isRecovering) staleMin = STALE_MAX;
-
+      // Momentum label
       const momLabel = isRecovering ? 'recovering' : isDumping ? 'dumping' : isFlat ? 'flat' : 'moving';
+
+      // ── Outlook assessment — is this token worth holding? ──
+      const hasStrongMeta = !!pos.meta;
+      const hadHighScore = (pos._score || 0) >= 10;
+      const goodHolders = pos._holderData && pos._holderData.top1Pct < 25 && pos._holderData.holderCount >= 12;
+      const inProfit = pnlPct > 0;
+      const nearProfit = pnlPct > -3;
+      
+      // Bullish outlook = don't stale cut, let it ride
+      // ONLY for graduated (PumpSwap) tokens — bonding curve tokens get cut normally
+      const bullishOutlook = !pos.isBonding && (
+                             (isRecovering && nearProfit) ||
+                             (inProfit && !isDumping) ||
+                             (hasStrongMeta && !isDumping && pnlPct > -5) ||
+                             (hadHighScore && goodHolders && !isDumping && pnlPct > -5));
+
+      // Dynamic stale timeout — generous for bullish, tight for bearish
+      let staleMin = STALE_MAX;
+      if (isDumping && pnlPct < -3) staleMin = STALE_MIN;
+      else if (isFlat && pnlPct < -3) staleMin = (STALE_MIN + STALE_MAX) / 2;
+      else if (bullishOutlook) staleMin = STALE_MAX * 3;  // 3x patience for bullish tokens
+      else if (isRecovering) staleMin = STALE_MAX * 2;
 
       if (pnlPct >= TP) {
         log('TP', `$${pos.symbol} [${label}] +${pnlPct.toFixed(1)}% (${currentSol.toFixed(4)} SOL)`);
@@ -774,12 +930,16 @@ async function checkPositions() {
           log('SL', `$${pos.symbol} [${label}] ${pnlPct.toFixed(1)}%`);
           await executeSell(mint, 'stop loss');
         }
-      } else if (holdMin > staleMin && pnlPct < 10) {
+      } else if (holdMin > staleMin && pnlPct < 10 && !bullishOutlook) {
         log('STALE', `$${pos.symbol} [${label}] ${pnlPct.toFixed(1)}% after ${holdMin.toFixed(0)}min (${momLabel})`);
         await executeSell(mint, `stale cut — ${momLabel}`);
+      } else if (holdMin > staleMin && bullishOutlook) {
+        // Bullish but been a while — just log, don't cut
+        log('HOLD', `$${pos.symbol} [${label}] ${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}% | ${holdMin.toFixed(0)}min | ${momLabel} | bullish outlook — holding`);
       } else {
-        const patience = staleMin - holdMin;
-        log('HOLD', `$${pos.symbol} [${label}] ${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}% | ${holdMin.toFixed(0)}min | ${momLabel} | ${patience.toFixed(0)}min left`);
+        const patience = Math.max(staleMin - holdMin, 0);
+        const outlook = bullishOutlook ? ' | BULLISH' : '';
+        log('HOLD', `$${pos.symbol} [${label}] ${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}% | ${holdMin.toFixed(0)}min | ${momLabel} | ${patience.toFixed(0)}min left${outlook}`);
       }
     } catch (e) {
       log('ERROR', `Position check ${pos.symbol}: ${e.message}`);
@@ -845,6 +1005,7 @@ async function scanAndTrade() {
 // ══════════════════════════════════════════════════════════════
 
 async function syncState(bal) {
+  lastKnownBalance = bal;
   const holdingsArr = [...positions.entries()].map(([mint, p]) => ({
     mint, symbol: p.symbol, buySol: p.buySol, buyTime: p.buyTime, isBonding: p.isBonding, meta: p.meta,
   }));
@@ -870,6 +1031,7 @@ async function syncState(bal) {
 }
 
 const startTime = Date.now();
+const MAX_RUNTIME_MS = 27 * 60 * 1000; // Exit after 27min for clean restart
 let startBalance = 0;
 
 async function main() {
@@ -878,6 +1040,7 @@ async function main() {
 
   await initDB();
   console.log('[DB] Connected to Neon PostgreSQL');
+  await loadMemory();
 
   const bal = await getBalance();
   console.log(`Balance: ${bal.toFixed(4)} SOL`);
@@ -887,7 +1050,61 @@ async function main() {
   console.log('');
 
   startBalance = bal;
+  lastKnownBalance = bal;
   log('BOOT', `Agent online. Balance: ${bal.toFixed(4)} SOL. Scanning ${CYCLE_MS/1000}s cycles.`, 'system');
+
+  // ── RECOVER EXISTING POSITIONS FROM WALLET ──
+  // On restart, we lose the in-memory positions Map.
+  // Scan wallet for any tokens we're still holding and re-add them so they get managed.
+  try {
+    const SPL = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+    const T22 = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+    const [a, b] = await Promise.all([
+      conn.getParsedTokenAccountsByOwner(wallet.publicKey, { programId: SPL }),
+      conn.getParsedTokenAccountsByOwner(wallet.publicKey, { programId: T22 }),
+    ]);
+    const existing = [...a.value, ...b.value]
+      .map(x => ({
+        mint: x.account.data.parsed.info.mint,
+        amount: x.account.data.parsed.info.tokenAmount.amount,
+        ui: x.account.data.parsed.info.tokenAmount.uiAmount,
+      }))
+      .filter(t => Number(t.amount) > 0);
+
+    if (existing.length > 0) {
+      log('RECOVER', `Found ${existing.length} existing token holdings in wallet`, 'system');
+      for (const t of existing) {
+        // Try to get a SOL value to estimate what we paid
+        let estValue = 0;
+        try {
+          const SOL = 'So11111111111111111111111111111111111111112';
+          const qr = await fetch(`https://lite-api.jup.ag/swap/v1/quote?inputMint=${t.mint}&outputMint=${SOL}&amount=${t.amount}&slippageBps=1500`);
+          if (qr.ok) estValue = Number((await qr.json()).outAmount) / 1e9;
+        } catch {}
+
+        // Skip dust (worth less than 0.001 SOL)
+        if (estValue < 0.001) {
+          log('RECOVER', `Skipping dust: ${t.mint.slice(0,8)}... (${estValue.toFixed(4)} SOL)`, 'system');
+          continue;
+        }
+
+        positions.set(t.mint, {
+          symbol: t.mint.slice(0, 8), name: t.mint.slice(0, 8),
+          buySol: estValue,  // use current value as buy price (conservative — treats as breakeven)
+          buyTime: Date.now() - 5 * 60000,  // pretend bought 5min ago so stale timers work
+          tokens: t.amount, uiTokens: t.ui,
+          isBonding: false,  // assume graduated since it's tradeable on Jupiter
+          priceHistory: [],
+          creator: null, meta: null,
+          _score: 0, _mcap: 0, _replies: 0, _ageHours: 0, _holderData: null,
+        });
+        log('RECOVER', `Re-added ${t.mint.slice(0,8)}... | ${t.ui} tokens | ~${estValue.toFixed(4)} SOL value`, 'system');
+      }
+      log('RECOVER', `${positions.size} positions recovered. Will manage/sell normally.`, 'system');
+    }
+  } catch (e) {
+    log('RECOVER', `Wallet scan failed: ${e.message}`, 'error');
+  }
 
   // Log base skills on first boot
   const baseSkills = [
@@ -906,6 +1123,15 @@ async function main() {
   }
 
   while (true) {
+    // Self-exit before 30min session timeout — forever runner will relaunch
+    if (Date.now() - startTime > MAX_RUNTIME_MS) {
+      log('RESTART', `27min runtime reached. Persisting state and exiting for clean restart...`, 'system');
+      await persistMemory();
+      const bal = await getBalance();
+      await syncState(bal);
+      process.exit(0);
+    }
+
     cycle++;
     try {
       await checkPositions();

@@ -113,7 +113,6 @@ export default function Terminal() {
             <p style={{ fontFamily: C.mono, fontSize: 12, color: C.dim }}>No trades yet. Trades will appear here when the agent goes live.</p>
           </div>
         </div>
-      </div>
 
         {/* ──── Advanced Skills / Architecture ──── */}
         <div style={{ marginTop: 48, marginBottom: 16 }}>
@@ -248,7 +247,7 @@ export default function Terminal() {
           </div>
           <div style={{ padding: '12px 16px', borderTop: `1px solid ${C.border}`, textAlign: 'center' }}>
             <span style={{ fontFamily: C.mono, fontSize: 9, color: C.dim }}>
-              [*] SharkD  |  [+] Supported  |  [ ] Not available  —  Comparison based on publicly documented features as of 2026
+              {'[*] SharkD  |  [+] Supported  |  [ ] Not available  —  Comparison based on publicly documented features as of 2026'}
             </span>
           </div>
         </div>

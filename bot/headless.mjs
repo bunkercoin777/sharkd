@@ -889,6 +889,18 @@ async function main() {
   startBalance = bal;
   log('BOOT', `Agent online. Balance: ${bal.toFixed(4)} SOL. Scanning ${CYCLE_MS/1000}s cycles.`, 'system');
 
+  // Log base skills on first boot
+  const baseSkills = [
+    { name: 'Holder Distribution Analysis', description: 'On-chain holder check before every buy. Rejects tokens where top wallet holds 50%+ or top 5 hold 70%+. Thresholds tighten as losses teach which concentrations are dangerous.', data: { maxTop1Pct: 50, maxTop5Pct: 70, source: 'built-in' } },
+    { name: 'Narrative Detection', description: 'Scans 500+ token names per cycle to detect trending keywords. Tokens matching active metas get a score boost. Multiplier adjusts based on whether meta trades outperform non-meta trades.', data: { multiplier: 1.0, minKeywords: 3, source: 'built-in' } },
+    { name: 'Momentum Tracking', description: 'Tracks price history across hold cycles to calculate momentum. Dumping tokens get cut at minimum stale time. Recovering tokens get maximum patience. Flat losers get cut at midpoint.', data: { historyDepth: 30, dumpThreshold: -5, recoverThreshold: 2, source: 'built-in' } },
+    { name: 'Graduated Token Routing', description: 'Detects bonding curve vs graduated tokens and routes through PumpPortal or Jupiter accordingly. Graduated tokens use Jupiter with escalating slippage on sells. Bonding curve tokens use PumpPortal direct.', data: { jupiterSlippage: '1500-2500bps', pumpPortalSlippage: '25%', source: 'built-in' } },
+    { name: 'Adaptive Position Sizing', description: 'Position size scales with win rate. Starts at 0.02 SOL, scales to 0.20 SOL as performance proves out. Never risks more than 30% of balance on a single trade.', data: { baseBuy: 0.02, maxBuy: 0.20, maxBalancePct: 30, source: 'built-in' } },
+  ];
+  for (const s of baseSkills) {
+    dbLogSkill(s).catch(() => {});
+  }
+
   if (bal < 0.05) {
     console.log('WARNING: Balance very low. Fund wallet before trading.');
   }
@@ -899,9 +911,9 @@ async function main() {
       await checkPositions();
       await scanAndTrade();
 
-      // Analyze and adapt every 3 trades (learn fast)
+      // Analyze and adapt every 2 trades (learn fast)
       const totalTrades = wins + losses;
-      if (totalTrades > 0 && totalTrades % 3 === 0 && learnings.trades.length >= 3) analyzeAndAdapt();
+      if (totalTrades > 0 && totalTrades % 2 === 0 && learnings.trades.length >= 2) analyzeAndAdapt();
 
       // Sync state to DB for live terminal
       const bal = await getBalance();

@@ -427,8 +427,150 @@
       "meta": "matches \"cartel\" meta (10 tokens)",
       "time": 1771823485199,
       "tx": "Dz1PeSeuvFaGFRQvY6T6ag66Euz1QFBkwUfYnM1eV8sk7GyVXvTG5mYAWkrssuDXhcadRT8aCB9aJfmKhzF7bXB"
+    },
+    {
+      "type": "sell",
+      "token": "FSC",
+      "mint": "BPJivqTmLmLDjfSn71gp8XaFYDXxNUuM85pMEWAcpump",
+      "pnl": -0.0019231939999999996,
+      "pnlPct": -9.615969999999997,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.740868338,
+      "time": 1771823808100,
+      "tx": "531cLigpxJr8JjpxYNXys6UWrSw6pZniDfHiM2eBZb1BoQ3Ueoaap651JrCPSrdVSxsyALtPqjwC61VijGbVk2Qv"
+    },
+    {
+      "type": "buy",
+      "token": "starxxing",
+      "mint": "BnMsDWFW4tTZ3yhYkePCKDgPjniYrhDMtox28jTXpump",
+      "amount": 0.02,
+      "score": 12,
+      "meta": "matches \"lobstar\" meta (8 tokens)",
+      "time": 1771823822040,
+      "tx": "2oAVGZyt4DhtcHLYk7XSCz2x63pxdRubX2rBY3zb9beAqzK4RPBpzSAdYSTQwJjsEfgN1JBru1nwx3RuEN8zZWw6"
+    },
+    {
+      "type": "sell",
+      "token": "Chungus",
+      "mint": "3XzNoCvGon8xFphusCcuFEZyMPuvzfESrwEBEMHSpump",
+      "pnl": -0.0004802570000000013,
+      "pnlPct": -2.4012850000000063,
+      "reason": "stale cut — flat",
+      "result": "loss",
+      "balance": 4.738009951,
+      "time": 1771823856195,
+      "tx": "KgBEKKqEQqp8JM9TU4RhEPDt4KT3AZjBXa5TxY9YFiXNNqZrrt7HLgVevSyAJczYZV6pyEyooxRMBwRCKncoCgn"
+    },
+    {
+      "type": "buy",
+      "token": "ROSClaw",
+      "mint": "23daKhFcKK24AHBojh89wRmVb9Lmh6BuMSeKjmrqTQUX",
+      "amount": 0.02,
+      "score": 8,
+      "meta": null,
+      "time": 1771823866462,
+      "tx": "2947URUqzrb76obsReiSRe7jdR6ETLn5d6uBuDdBBoyA4XMzWajCaxjBDYVpoFULk3ah3ykrnWQKUYwvSx7zh7Fy"
+    },
+    {
+      "type": "sell",
+      "token": "starxxing",
+      "mint": "BnMsDWFW4tTZ3yhYkePCKDgPjniYrhDMtox28jTXpump",
+      "pnl": -0.0017252910000000003,
+      "pnlPct": -8.626455000000002,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.737512785,
+      "time": 1771823905499,
+      "tx": "3RMf14tUvgeN6koBUqhdneB9qVVrMEpzFbfSJPy5EgxJihnMnTM2Lo5hLpYd3jFAgao1cnK15tBU1nq2k5Hh43BA"
+    },
+    {
+      "type": "buy",
+      "token": "Lobstarism",
+      "mint": "HmV9Y1hr8KrKzJtW44QbgTVSW5XH4cv7gp1VNBzTpump",
+      "amount": 0.02,
+      "score": 11,
+      "meta": "matches \"lobstar\" meta (8 tokens)",
+      "time": 1771823921704,
+      "tx": "3KNccNV8KVczxj6pb4fp2TKUxJ8jHriUFr8ozrYsFkcNQ6u6EGxscjpUiEm7CXt7N9m5FtF2YvaJxM8JyWyTPPMY"
+    },
+    {
+      "type": "sell",
+      "token": "ROSClaw",
+      "mint": "23daKhFcKK24AHBojh89wRmVb9Lmh6BuMSeKjmrqTQUX",
+      "pnl": -0.0020095679999999998,
+      "pnlPct": -10.047839999999999,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.73529992,
+      "time": 1771823963127,
+      "tx": "bVpNwVS7vXPjTRhLQTurukNBKQvgnPnkjUbhuBW4pLFixkH17HXechekB3iz8j8ymMRzMXGRLSR4UiMT78w5a3D"
+    },
+    {
+      "type": "buy",
+      "token": "BLOB",
+      "mint": "5Xw8pE5hwTQycxZZ752yeBdtwWiRmDzxskt9Bgapump",
+      "amount": 0.02,
+      "score": 10,
+      "meta": "matches \"lobstar\" meta (8 tokens)",
+      "time": 1771823980485,
+      "tx": "1248H2sKfkrLKY7QtrMMSrdjm2s815YWB8D4yiVHDf5wsgrvj51crS2a2pVqARHsXGV33yYVBTkhJjkdHBRkhqNW"
+    },
+    {
+      "type": "sell",
+      "token": "BLOB",
+      "mint": "5Xw8pE5hwTQycxZZ752yeBdtwWiRmDzxskt9Bgapump",
+      "pnl": 0.019383702,
+      "pnlPct": 96.91851,
+      "reason": "take profit",
+      "result": "win",
+      "balance": 4.754488464,
+      "time": 1771824020320,
+      "tx": "5HBq99JafzaHLfoxDBSnwYvUrwmrULDwGGcseMEFn4g3iq2t6YpfftUz6xXYvMw12kbzLmKu1rAV6UBj5g1mpcnE"
+    },
+    {
+      "type": "buy",
+      "token": "Manchas",
+      "mint": "Bp2seLDKMnkuuxQkmknf2vSEhffQSuBooUWWRnnLpump",
+      "amount": 0.02,
+      "score": 12,
+      "meta": "matches \"dog\" meta (7 tokens)",
+      "time": 1771824030364,
+      "tx": "3NAaUDWPW2ovNhSjJBLnJD6jb5ULQn4SPYjDqmzGD9BPqnyRrWYwKm2d1iZWjvNvxt89TGZxeDYFCDZWGamC2VY2"
+    },
+    {
+      "type": "sell",
+      "token": "CJNG",
+      "mint": "b1pEVn3dzPGyqCivgYZWSFxzcqdbKhusr4ND4bQpump",
+      "pnl": 0.0013556420000000007,
+      "pnlPct": 6.778210000000002,
+      "reason": "stale cut — moving",
+      "result": "win",
+      "balance": 4.753467766,
+      "time": 1771824099084,
+      "tx": "4jNF52zSY6Xut6LYBpFjrcmPVzZQq9JBLxCRSpSrS8zn2HqFEZ4uqdATPi2XKZz2b1h42swRn45HmDaG15A7M9N4"
+    },
+    {
+      "type": "buy",
+      "token": "WhiteAlien",
+      "mint": "2Ci4XBmr67JFoS5YPrE8hmJPN9QgkcUab7xd8Vpipump",
+      "amount": 0.05,
+      "score": 13,
+      "meta": "matches \"white\" meta (8 tokens)",
+      "time": 1771824110880,
+      "tx": "4yrjsD4Eqz7bckaBkSn7ttWiEBqH11w9xuyQ7jq7LstYTaKa4BWXiMp7JmMBsqW8PdoKgXuXmdQQhcQ7UwT16AWd"
+    },
+    {
+      "type": "buy",
+      "token": "starxxing",
+      "mint": "BnMsDWFW4tTZ3yhYkePCKDgPjniYrhDMtox28jTXpump",
+      "amount": 0.02,
+      "score": 11,
+      "meta": "matches \"lobstar\" meta (7 tokens)",
+      "time": 1771824399174,
+      "tx": "2nTfKedCPwvz9kfnhUaLwX9ynzH286T5GnHp6fyhitxvdzmyJd7uKeUmKrb2oCmTvtVrMvPaQQnRrP7LmgskGe4b"
     }
   ],
-  "lastTrade": 1771823485199,
+  "lastTrade": 1771824399175,
   "lastPost": 1771823400207
 }

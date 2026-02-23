@@ -1,0 +1,23 @@
+{
+  "skills": [
+    {
+      "name": "Whale Shield",
+      "description": "Tightened top holder limit to 30% after 3 whale-caused losses. Avg losing top1: 42%.",
+      "data": {
+        "maxTop1Pct": 30,
+        "lossCount": 3,
+        "avgTop1": 41.812920589549805
+      },
+      "time": 1771824030366
+    },
+    {
+      "name": "Distribution Filter",
+      "description": "Tightened top5 holder limit to 60% after repeated concentrated dumps.",
+      "data": {
+        "maxTop5Pct": 60,
+        "lossCount": 3
+      },
+      "time": 1771824030367
+    }
+  ]
+}

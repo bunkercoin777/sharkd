@@ -132,6 +132,33 @@ async function loadMemory() {
   }
 }
 let wins = 0, losses = 0, totalPnl = 0, cycle = 0;
+let sessionPnl = 0; // track PnL within this session for daily loss limit
+const DAILY_LOSS_LIMIT = -0.5; // stop trading if we lose 0.5 SOL in one session
+
+// Time-of-day trading multiplier (research shows Tue-Thu 13-17 UTC is prime time)
+function getTimeMultiplier() {
+  const now = new Date();
+  const hourUTC = now.getUTCHours();
+  const dayUTC = now.getUTCDay(); // 0=Sun, 1=Mon...
+  
+  let timeMult = 0.75; // default
+  
+  // Prime hours: 13-17 UTC (US market open)
+  if (hourUTC >= 13 && hourUTC < 18) timeMult = 1.0;
+  // Good hours: 17-21 UTC (US afternoon)  
+  else if (hourUTC >= 17 && hourUTC < 22) timeMult = 0.9;
+  // Early/EU: 8-12 UTC
+  else if (hourUTC >= 8 && hourUTC < 13) timeMult = 0.8;
+  // Dead hours: 0-7 UTC — trade smaller
+  else timeMult = 0.6;
+  
+  // Best days: Tue(2), Wed(3), Thu(4)
+  if ([2, 3, 4].includes(dayUTC)) timeMult *= 1.0;
+  else if ([1, 5].includes(dayUTC)) timeMult *= 0.85; // Mon, Fri
+  else timeMult *= 0.7; // Sat, Sun
+  
+  return timeMult;
+}
 
 // ══════════════════════════════════════════════════════════════
 // LEARNING ENGINE — adapts from every trade
@@ -624,6 +651,10 @@ function getBuyAmount(isBonding, score = 0, holderData = null, mcap = 0) {
   const balanceCap = balance * 0.04; // never more than 4% of balance
 
   amount = Math.round(amount * 1000) / 1000;
+  // ── TIME-OF-DAY ADJUSTMENT ──
+  // Research shows Tue-Thu 13-17 UTC has highest pump probability
+  amount *= getTimeMultiplier();
+
   amount = Math.min(amount, max, balanceCap);
   amount = Math.max(amount, base);
 
@@ -850,6 +881,7 @@ async function executeSell(mint, reason) {
     if (pnlSol >= 0) wins++; else losses++;
   }
   totalPnl += pnlSol;
+  sessionPnl += pnlSol; // track session PnL for daily loss limit
 
   // Track rug creators + rug patterns
   if (pnlSol < -0.005 && pos.creator) {
@@ -1025,6 +1057,12 @@ async function checkPositions() {
 async function scanAndTrade() {
   if (positions.size >= MAX_POSITIONS) {
     log('SCAN', `Max positions (${MAX_POSITIONS}). Monitoring only.`);
+    return;
+  }
+
+  // Daily loss limit — stop trading if session PnL is too negative
+  if (sessionPnl < DAILY_LOSS_LIMIT) {
+    log('RISK', `Session PnL ${sessionPnl.toFixed(4)} SOL hit daily loss limit (${DAILY_LOSS_LIMIT}). Monitoring only.`);
     return;
   }
 

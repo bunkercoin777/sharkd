@@ -23,16 +23,7 @@ export function Nav() {
     }}>
       <div style={{ maxWidth: 1060, margin: '0 auto', padding: '0 clamp(20px, 4vw, 40px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 60 }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <div style={{
-            width: 30, height: 30, borderRadius: 8,
-            background: 'linear-gradient(135deg, rgba(0,180,216,0.15), rgba(0,119,182,0.08))',
-            border: '1px solid rgba(0,180,216,0.2)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 16,
-          }}>
-            {/* placeholder for shark icon */}
-            <span style={{ color: C.accent, fontWeight: 900, fontFamily: C.mono, fontSize: 14 }}>S</span>
-          </div>
+          <img src="/shark.jpg" alt="SharkD" style={{ width: 30, height: 30, borderRadius: 8, objectFit: 'cover', border: '1px solid rgba(0,180,216,0.2)' }} />
           <span style={{ fontFamily: C.mono, fontWeight: 800, fontSize: 16, letterSpacing: 2, color: C.white }}>SHARKD</span>
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>

@@ -1637,8 +1637,44 @@
       "meta": null,
       "time": 1771868659491,
       "tx": "4SXZegDqX5wAMGXDnRYBiuBQ9E7GaBBYqZvHNCccbtBCkACb6dtArkmuscumP3dDU8huuH3M5boGyG483Sf1Pipn"
+    },
+    {
+      "type": "sell",
+      "token": "5UA32VJr",
+      "mint": "5UA32VJrb9ifsvv7y9AhHDPoADTWFDEHbTr4fVPHpump",
+      "pnl": 0,
+      "pnlPct": 0,
+      "reason": "quick stale — flat DOA",
+      "result": "win",
+      "balance": 10.924299863,
+      "time": 1771869088496,
+      "tx": "ki3B6NXkh9ZXMq1zqCSqJrXbPNW9EGJh4gEqY64QQMVYZfhKKiiTY5q69uCfZbbkhD8a5pEgFhGxvBbrkWcvZHL"
+    },
+    {
+      "type": "sell",
+      "token": "F5tfztTn",
+      "mint": "F5tfztTnE4sYsMhZT5KrFpWvHmYSfJZoRjCuxKPbpump",
+      "pnl": 0,
+      "pnlPct": 0,
+      "reason": "quick stale — flat DOA",
+      "result": "win",
+      "balance": 11.011494798,
+      "time": 1771869091468,
+      "tx": "5ei8GFgrJzL7uN69vWCjFoBJ36u6w5aPQowHdei8k6sUyxyFzuaWVTSqNJXJuit7esJT1V9HubPtNCfBisjBQN86"
+    },
+    {
+      "type": "sell",
+      "token": "C3NNZ2Jx",
+      "mint": "C3NNZ2JxJpA2VD36tEyWh4ztnhuf4qD3h8sWDq3Npump",
+      "pnl": 0,
+      "pnlPct": 0,
+      "reason": "quick stale — flat DOA",
+      "result": "win",
+      "balance": 11.057153095,
+      "time": 1771869097075,
+      "tx": "3xeMe1aTe78zsnXCPhpBvMncB2iP6d7qSUkthZ36KiMTHCKgcgdpmcbQpv2ey6ioJjDutkiW7GzVbhERJ5RkEoiM"
     }
   ],
-  "lastTrade": 1771868659492,
+  "lastTrade": 1771869097076,
   "lastPost": 1771823400207
 }

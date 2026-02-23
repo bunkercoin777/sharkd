@@ -20,7 +20,7 @@ import https from 'https';
 
 const ACCOUNT_ID = '1239955098803060737';
 const BUILDER = '@BenGannonsAI';
-const POST_INTERVAL = 12 * 60 * 1000; // 12min between posts
+const POST_INTERVAL = 10 * 60 * 1000; // 10min between posts
 const REPLY_CHECK_INTERVAL = 5 * 60 * 1000;
 const ENGAGEMENT_CHECK_INTERVAL = 15 * 60 * 1000;
 

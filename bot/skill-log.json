@@ -468,6 +468,15 @@
         "lowScoreWins": 0
       },
       "time": 1771845007555
+    },
+    {
+      "name": "Quality Filter",
+      "description": "Low-score tokens (<=6) losing heavily: 5L vs 0W. Prioritizing higher conviction trades.",
+      "data": {
+        "lowScoreLosses": 5,
+        "lowScoreWins": 0
+      },
+      "time": 1771845273441
     }
   ]
 }

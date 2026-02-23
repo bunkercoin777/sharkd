@@ -1773,8 +1773,186 @@
       "balance": 4.55657143,
       "time": 1771845140505,
       "tx": "5URdUVotkvz7jijAhYtVtoRam4wSigKrHQvYpKYBYQJPwjNdqFkDEcYcr5sdyaji7JaVK3XAHgNfcwf7u8AnvSzT"
+    },
+    {
+      "type": "sell",
+      "token": "PICOCLAW",
+      "mint": "J618Z45QsVvdk7qxWkGKDFurQ7KuiZjEwu6evhENpump",
+      "pnl": -0.0005047070000000001,
+      "pnlPct": -2.5235350000000003,
+      "reason": "stale cut — flat",
+      "result": "loss",
+      "balance": 4.5758726,
+      "time": 1771845266746,
+      "tx": "ubFcGddYNiMFBj9dSVXDon6A6MAZyryMXzFViBnaebUvFqJeFygy7dghvm7dUVi5kppeYQYx2jyc6VQ182nMVph"
+    },
+    {
+      "type": "buy",
+      "token": "CASH",
+      "mint": "FCn6fkKNzsdG5fgH8hBKKRE91R2LkwAtCCfFxXZhpump",
+      "amount": 0.036,
+      "score": 15,
+      "meta": "matches \"cartel\" meta (16 tokens)",
+      "time": 1771845314824,
+      "tx": "3CUcqGCpRY53roDZ7ZmLLDALbDbyNfTwoZhYP2wFjYPxZcrfqLXngMejwrDqm9BgNmLHhEyYB3gX5kwANpVggTTm"
+    },
+    {
+      "type": "buy",
+      "token": "MOGGED",
+      "mint": "59gPcuoED3gB7u66sAjjMiXprVBZmAi1wpGZyK6Upump",
+      "amount": 0.02,
+      "score": 9,
+      "meta": null,
+      "time": 1771845334808,
+      "tx": "5NUjvsj3bzAbHwULUrh7BPGyq6G3Me6d6Ej8ZSShcsAQmZyU7YiF1R9w9gtUeGAs4tR2J4B15DdqWb7FtBt1kZE2"
+    },
+    {
+      "type": "sell",
+      "token": "GNAMI",
+      "mint": "8XXdTcSpExMQcKaRqYUQURxaaCvvGPeWQi66rYG5pump",
+      "pnl": -0.0004743070000000002,
+      "pnlPct": -2.371535000000001,
+      "reason": "stale cut — flat",
+      "result": "loss",
+      "balance": 4.534939357,
+      "time": 1771845508746,
+      "tx": "3QxKpDLxR8LX3N97oxTHd9TDzfd5WovpkAcAPRyG5VV1ity5NquYaC8TBn8ShmRTxhDJ7BTaKXhsvZrmHP4t7ScU"
+    },
+    {
+      "type": "buy",
+      "token": "DEEPSEEKV4",
+      "mint": "BC7r1tW6wwESwFgXa39HZNWrD7913z4HVX131Kmopump",
+      "amount": 0.02,
+      "score": 9,
+      "meta": null,
+      "time": 1771845599056,
+      "tx": "q9Fmtd38qsdWSHwbvhoANWczoaJory8GhKn82WwGMYFVnznFc9721Tpdt5Ptxu8bpovBzbf9aWjJUdUTjJsQzmw"
+    },
+    {
+      "type": "sell",
+      "token": "MOGGED",
+      "mint": "59gPcuoED3gB7u66sAjjMiXprVBZmAi1wpGZyK6Upump",
+      "pnl": -0.0004743079999999997,
+      "pnlPct": -2.371539999999998,
+      "reason": "stale cut — flat",
+      "result": "loss",
+      "balance": 4.532180969,
+      "time": 1771845774944,
+      "tx": "XmeGjtZdJEFSJnwRMEY7Woz1VyV6vrJGAfrPzqbBwzKjPmKsx3naQG53qA9H94T6TLTCzcYyxqoP8W586Z6EFgW"
+    },
+    {
+      "type": "buy",
+      "token": "SELF",
+      "mint": "CMJ78xLUnJjcvLRteqQm6YBe7HFKN3N3xx8hutFzpump",
+      "amount": 0.02,
+      "score": 9,
+      "meta": null,
+      "time": 1771845819203,
+      "tx": "35AKUEFGtDcQj8vXS226ecR6k9xWaGy1fgBzW3BCkURWZU3zHeS2XhQpwAYKTmmRSYHiyAUm1idE2kTJ7qBtEnYz"
+    },
+    {
+      "type": "buy",
+      "token": "42 ",
+      "mint": "BndKr3tLyEYvbarxrJNki72CnaFmPKYCSdLpDGuepump",
+      "amount": 0.039,
+      "score": 9,
+      "meta": "matches \"official\" meta (6 tokens)",
+      "time": 1771845918039,
+      "tx": "3pcr7jXuBXCNT8sNm1Z2FeKpUABDgssN3yEXTUNujQLsSDvVWxVQhCP4unkuTTu3ooFGaCyJQ3Xq9nxDaUscJsxk"
+    },
+    {
+      "type": "sell",
+      "token": "DEEPSEEKV4",
+      "mint": "BC7r1tW6wwESwFgXa39HZNWrD7913z4HVX131Kmopump",
+      "pnl": -0.0004743070000000002,
+      "pnlPct": -2.371535000000001,
+      "reason": "stale cut — flat",
+      "result": "loss",
+      "balance": 4.49041178,
+      "time": 1771845964551,
+      "tx": "2eqjCK73dBmC6kNhV9nfFAcU5VYrYya9R7kGfCtfis5eK5z5hUszbeNfYDSrCjE4T2ANQd4wjaq5tRuiJLAhUhfr"
+    },
+    {
+      "type": "buy",
+      "token": "Manchas",
+      "mint": "Bp2seLDKMnkuuxQkmknf2vSEhffQSuBooUWWRnnLpump",
+      "amount": 0.02,
+      "score": 9,
+      "meta": null,
+      "time": 1771845975398,
+      "tx": "4yTfWS6bRqzZwZf8vnRbeqGETTTjNR8XTGLSYnad6dtGDfkcdaXuxjE5yssR5Ayx84gF8hEKAP2b4QeE9G1jhJ9r"
+    },
+    {
+      "type": "sell",
+      "token": "FCn6fkKN",
+      "mint": "FCn6fkKNzsdG5fgH8hBKKRE91R2LkwAtCCfFxXZhpump",
+      "pnl": -0.003194782,
+      "pnlPct": -8.901029539086057,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.50215819,
+      "time": 1771846252733,
+      "tx": "k1i1pNVgLJaALM7o97uidgFjVd2jJRvgdkf8ewk8SEj3qRaQvrox83YyLmpVRGTMRAhMf71384Hs8X5XzFxvYc7"
+    },
+    {
+      "type": "sell",
+      "token": "BndKr3tL",
+      "mint": "BndKr3tLyEYvbarxrJNki72CnaFmPKYCSdLpDGuepump",
+      "pnl": 0,
+      "pnlPct": 0,
+      "reason": "stale cut — flat",
+      "result": "win",
+      "balance": 4.54018092,
+      "time": 1771846309199,
+      "tx": "WYcoZeypyacZ2QiHmhowULDTChuDTdADWdRD6EhCXV9oQToUhA8N7DUuXQjicBqwsHrPeMRra31igBSSKTW4zC1"
+    },
+    {
+      "type": "sell",
+      "token": "FWMxW5Hc",
+      "mint": "FWMxW5Hckakq7G1f2YJrUb9fkeQp7Jh15FCZNhE8fZgT",
+      "pnl": 0,
+      "pnlPct": 0,
+      "reason": "stale cut — flat",
+      "result": "win",
+      "balance": 4.559663553,
+      "time": 1771846314395,
+      "tx": "5qRTV2deYxSq6XRc6v53AjqUHmtHHqvErzx3tmscM6uG3ztE3hBR8EMkxLENFELp4K129ri2o52LSXNxdWyqe3fU"
+    },
+    {
+      "type": "sell",
+      "token": "Bp2seLDK",
+      "mint": "Bp2seLDKMnkuuxQkmknf2vSEhffQSuBooUWWRnnLpump",
+      "pnl": 0,
+      "pnlPct": 0,
+      "reason": "stale cut — flat",
+      "result": "win",
+      "balance": 4.578979614,
+      "time": 1771846320029,
+      "tx": "3dawym8BwVp89jutL2dnTNKVAfSfDwnpYBrSLAhZQ7kaitRHnyKqCsdZrhANuSWrGnesUQCy9TVW4XBY1frjuqnt"
+    },
+    {
+      "type": "sell",
+      "token": "CMJ78xLU",
+      "mint": "CMJ78xLUnJjcvLRteqQm6YBe7HFKN3N3xx8hutFzpump",
+      "pnl": -0.00013002600000000183,
+      "pnlPct": -0.6684610056187916,
+      "reason": "stale cut — flat",
+      "result": "loss",
+      "balance": 4.598096134,
+      "time": 1771846323263,
+      "tx": "44e618nznoqkzNNGoGcxZex88XXsxb75n4KT1ZLSBfcDAP8ESzpiQ4GStTK6E4TscndcPTYbVZx4MiVQtdMNcGPm"
+    },
+    {
+      "type": "buy",
+      "token": "FREEBIRD",
+      "mint": "GYyyeA8Pzp1Biyzp26fvFXaB3Qm43o8e5CfXseVjpump",
+      "amount": 0.02,
+      "score": 9,
+      "meta": null,
+      "time": 1771846532599,
+      "tx": "4Gc4aoQmwviCEZR391ss61rT1jkBGMERCK8isUkwrKjAscXE43q2HNuRNkHAjMPwhZcn38fPj4dSq4kfzfGnsvGp"
     }
   ],
-  "lastTrade": 1771845140506,
+  "lastTrade": 1771846532600,
   "lastPost": 1771823400207
 }

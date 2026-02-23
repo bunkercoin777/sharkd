@@ -12,7 +12,7 @@ export function Footer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontFamily: C.mono, fontWeight: 800, fontSize: 13, letterSpacing: 2, color: C.dimmer }}>SHARKD</span>
         </div>
-        <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dimmer }}>Autonomous Trading Intelligence</span>
+        <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dimmer }}>© 2025 SharkD. All rights reserved.</span>
       </div>
     </footer>
   );

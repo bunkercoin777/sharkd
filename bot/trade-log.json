@@ -1329,8 +1329,20 @@
       "meta": null,
       "time": 1771866023302,
       "tx": "27mD9Bh85efoAkfFJ9FAe7wbv8X4W2QYo8iBp2Qk1YGQhqB4VwkhauzyxUMCgqvEMMyqdYiPQzmTMPhMkqDfTnUi"
+    },
+    {
+      "type": "sell",
+      "token": "UFO",
+      "mint": "9enS2VasgRxzT2QVkhjfVJAtrVJGB9MSYTSvUpf2pump",
+      "pnl": -0.0018095899999999998,
+      "pnlPct": -6.959961538461538,
+      "reason": "stale cut — dumping",
+      "result": "loss",
+      "balance": 3.944706291,
+      "time": 1771866666331,
+      "tx": "4HdFKSt2SmyepcyqVQG4uBiSdxVkyRnf7PdSPR5bgbVVf7QaDEbpKjHRoEsMHrE2jCtBiX8p595Jq5mgH3KdS2v2"
     }
   ],
-  "lastTrade": 1771866023302,
+  "lastTrade": 1771866666331,
   "lastPost": 1771823400207
 }

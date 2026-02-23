@@ -339,6 +339,86 @@
         "multiplier": 1.5
       },
       "time": 1771866464139
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866486615
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866508844
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866530817
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866552870
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866575105
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866597107
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866619634
+    },
+    {
+      "name": "Narrative Boost",
+      "description": "Meta trades win at 50% vs 26%. Increasing narrative score weight by 1.5x.",
+      "data": {
+        "metaWR": "50",
+        "noMetaWR": "26",
+        "multiplier": 1.5
+      },
+      "time": 1771866641462
     }
   ]
 }

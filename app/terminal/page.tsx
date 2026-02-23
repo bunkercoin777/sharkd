@@ -102,6 +102,12 @@ export default function Terminal() {
               <h1 style={{ fontFamily: C.sans, fontSize: 24, fontWeight: 800, color: C.white, letterSpacing: '-0.02em', margin: 0 }}>Live Terminal</h1>
               <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim }}>SharkD Reference Agent {agent ? `| cycle #${agent.cycle}` : ''}</span>
             </div>
+            <a href="https://pump.fun/coin/9FxxWFyEquSswwCjAE46vVMAdi7bfiQqMNkYy3o7pump" target="_blank" rel="noopener" style={{
+              marginLeft: 12, display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '6px 14px', borderRadius: 8, textDecoration: 'none',
+              background: 'linear-gradient(135deg, #00b4d8, #0077b6)', color: '#020810',
+              fontWeight: 700, fontSize: 11, fontFamily: C.mono,
+            }}>Buy $SHARKD</a>
           </div>
           {agent && (
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>

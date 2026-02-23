@@ -1615,8 +1615,30 @@
       "meta": null,
       "time": 1771868402208,
       "tx": "SZmLTqgboWc2bJVkMcyb24j9aWrF1pk9mUzC5kSc2giSoyMsEPaj9iuDwhFo31PKVqy7KqM63bn15f3PQJhvEgt"
+    },
+    {
+      "type": "sell",
+      "token": "TOASTER",
+      "mint": "2xMNNityqHbafNAgNBF95phKcdx97qahJMwkUh4Bpump",
+      "pnl": -0.005529111000000003,
+      "pnlPct": -8.639235937500004,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 10.908025696,
+      "time": 1771868427120,
+      "tx": "b2KvF3wUqhs7pBMyaAuFGAsVndgpJ2xSHmHAfnowd1bcNCSLxnm9C1nmiSddxKs8tFno4s4epfkzAXvva9ECYsA"
+    },
+    {
+      "type": "buy",
+      "token": "ORGANIC",
+      "mint": "C3NNZ2JxJpA2VD36tEyWh4ztnhuf4qD3h8sWDq3Npump",
+      "amount": 0.047,
+      "score": 9,
+      "meta": null,
+      "time": 1771868659491,
+      "tx": "4SXZegDqX5wAMGXDnRYBiuBQ9E7GaBBYqZvHNCccbtBCkACb6dtArkmuscumP3dDU8huuH3M5boGyG483Sf1Pipn"
     }
   ],
-  "lastTrade": 1771868402209,
+  "lastTrade": 1771868659492,
   "lastPost": 1771823400207
 }

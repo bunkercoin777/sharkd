@@ -55,7 +55,8 @@ const BOND_MIN_REPLIES = 8;
 
 const MAX_POSITIONS = 3;       // Allow multiple — hold slow movers while hunting new ones
 const CYCLE_MS = 20_000;       // scan every 20s — faster cycles
-const MIN_SCORE = 7;  // raised from 5 — be pickier, 37% win rate means we're not selective enough
+const MIN_SCORE = 7;  // raised from 5 — be pickier
+const MIN_SCORE_NO_NARRATIVE = 12; // non-narrative needs MUCH higher score (narrative trades win 50% vs 26%)
 
 // ══════════════════════════════════════════════════════════════
 // STATE
@@ -923,7 +924,8 @@ async function checkPositions() {
       const pnlPct = ((currentSol - pos.buySol) / pos.buySol) * 100;
       const holdMin = (Date.now() - pos.buyTime) / 60000;
       const TP = pos.isBonding ? BOND_TP : GRAD_TP;
-      const SL = pos.isBonding ? BOND_SL : GRAD_SL;
+      const baseSL = pos.isBonding ? BOND_SL : GRAD_SL;
+      const SL = pos.meta ? baseSL : baseSL * 0.625; // non-narrative: tighter SL (5% instead of 8%)
       const STALE_MIN = pos.isBonding ? BOND_STALE_MIN : GRAD_STALE_MIN;
       const STALE_MAX = pos.isBonding ? BOND_STALE_MAX : GRAD_STALE_MAX;
       const label = pos.isBonding ? 'BOND' : 'GRAD';
@@ -962,8 +964,35 @@ async function checkPositions() {
       else if (bullishOutlook) staleMin = STALE_MAX * 3;  // 3x patience for bullish tokens
       else if (isRecovering) staleMin = STALE_MAX * 2;
 
-      if (pnlPct >= TP) {
-        log('TP', `$${pos.symbol} [${label}] +${pnlPct.toFixed(1)}% (${currentSol.toFixed(4)} SOL)`);
+      // ── 90-SECOND QUICK STALE KILL ── (biggest lever: eliminates flat DOA entries)
+      if (holdMin > 1.5 && pnlPct < 3 && isFlat && !bullishOutlook) {
+        log('QUICKCUT', `$${pos.symbol} [${label}] ${pnlPct.toFixed(1)}% flat after 90s — DOA`);
+        await executeSell(mint, 'quick stale — flat DOA');
+        continue;
+      }
+
+      // ── TRAILING STOP ── (locks in gains on runners)
+      if (!pos._trailHigh) pos._trailHigh = pnlPct;
+      if (pnlPct > pos._trailHigh) pos._trailHigh = pnlPct;
+      
+      // Activate trailing stop once we've been +10%
+      if (pos._trailHigh >= 10 && pnlPct < pos._trailHigh - 5) {
+        log('TRAIL', `$${pos.symbol} [${label}] trailing stop hit: peak +${pos._trailHigh.toFixed(1)}% → now +${pnlPct.toFixed(1)}%`);
+        await executeSell(mint, 'trailing stop');
+        continue;
+      }
+      // Once +20%, tighter trail
+      if (pos._trailHigh >= 20 && pnlPct < pos._trailHigh - 7) {
+        log('TRAIL', `$${pos.symbol} [${label}] tight trail: peak +${pos._trailHigh.toFixed(1)}% → now +${pnlPct.toFixed(1)}%`);
+        await executeSell(mint, 'trailing stop tight');
+        continue;
+      }
+
+      // ── WIDER TP FOR NARRATIVE — let runners run ──
+      const effectiveTP = pos.meta ? TP * 1.33 : TP; // narrative gets 20% TP instead of 15%
+
+      if (pnlPct >= effectiveTP) {
+        log('TP', `$${pos.symbol} [${label}] +${pnlPct.toFixed(1)}% (${currentSol.toFixed(4)} SOL)${pos.meta ? ' [NARRATIVE]' : ''}`);
         await executeSell(mint, 'take profit');
       } else if (pnlPct <= SL) {
         if (isRecovering && pnlPct > SL * 1.5) {
@@ -1010,14 +1039,27 @@ async function scanAndTrade() {
     log('META', narratives.slice(0, 3).map(n => `"${n.keyword}" (${n.count})`).join(', '));
   }
 
-  // Score all
+  // Score all — narrative tokens get priority (50% WR vs 26% non-narrative)
   const scored = allTokens
     .filter(t => !exitedMints.has(t.mint) && !failedMints.has(t.mint) && !positions.has(t.mint))
     .map(t => { const s = scoreToken(t, narratives); t._score = s; return t; })
-    .filter(t => t._score.score >= MIN_SCORE)
-    .sort((a, b) => b._score.score - a._score.score);
+    .filter(t => {
+      if (t._score.score < MIN_SCORE) return false;
+      // Non-narrative tokens need much higher score to qualify
+      const hasNarrative = !!t._score.meta;
+      if (!hasNarrative && t._score.score < MIN_SCORE_NO_NARRATIVE) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort narrative tokens first, then by score
+      const aMeta = a._score.meta ? 1 : 0;
+      const bMeta = b._score.meta ? 1 : 0;
+      if (aMeta !== bMeta) return bMeta - aMeta;
+      return b._score.score - a._score.score;
+    });
 
-  log('SCORE', `${scored.length} candidates above score ${MIN_SCORE}`);
+  const narrativeCount = scored.filter(t => !!t._score.meta).length;
+  log('SCORE', `${scored.length} candidates (${narrativeCount} narrative) above threshold`);
 
   // Try top 5 with holder check
   for (const token of scored.slice(0, 5)) {

@@ -365,8 +365,28 @@
       "meta": "matches \"lobstar\" meta (9 tokens)",
       "time": 1771823152367,
       "tx": "2RUPFpxExGxLKnnduuXXRPVmU5hQENavggJaHPET6TY179XxXU229buw9jrnceVmNcsGBmGtcuXPZvuh9awftjpc"
+    },
+    {
+      "type": "buy",
+      "token": "Yara",
+      "mint": "DUC8tUNw8xv6wLzwXqF2ad9vvZFkWSkVhqRzGzhyEKZL",
+      "amount": 0.02,
+      "score": 16,
+      "meta": "matches \"yara\" meta (6 tokens)",
+      "time": 1771823229586,
+      "tx": "5hBDfymT8AxBE3CRLfDbgaZXD9TvVNnNv8Y5khkVabRR4rk4o8MxJFkNr14zNe4sRZw5WYP7cD3vMKMDMrnm79yo"
+    },
+    {
+      "type": "buy",
+      "token": "Yara",
+      "mint": "DUC8tUNw8xv6wLzwXqF2ad9vvZFkWSkVhqRzGzhyEKZL",
+      "amount": 0.02,
+      "score": 15,
+      "meta": "matches \"yara\" meta (6 tokens)",
+      "time": 1771823351598,
+      "tx": "ujsPXnZuwihQtB82yv1Jd9WKdTnSLK4ZJmTpeDSJ7vJAQ5sjrDpkcSChiqj4GtLHEzTP3fSSNUW6YgrcZp5LdHz"
     }
   ],
-  "lastTrade": 1771823152367,
+  "lastTrade": 1771823351598,
   "lastPost": null
 }

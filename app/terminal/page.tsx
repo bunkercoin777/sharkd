@@ -14,7 +14,7 @@ const C = {
 };
 
 interface AgentState {
-  status: string; balance: number; wins: number; losses: number; totalPnl: number;
+  status: string; balance: number; startBalance: number; wins: number; losses: number; totalPnl: number; tradePnl: number;
   winRate: number; holdings: Array<{ mint: string; symbol: string; buySol: number; buyTime: number; isBonding: boolean; meta: string | null }>;
   cycle: number; exitedCount: number; riskMode: string; gradBuy: number; bondBuy: number; uptime: number; lastUpdate: number;
 }
@@ -163,7 +163,8 @@ export default function Terminal() {
               <p style={{ fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: 2, color: C.accent, marginBottom: 12 }}>SESSION</p>
               {[
                 { label: 'Balance', value: agent ? `${agent.balance.toFixed(3)} SOL` : '—', color: agent ? C.white : C.dimmer },
-                { label: 'Today PnL', value: agent ? `${agent.totalPnl >= 0 ? '+' : ''}${agent.totalPnl.toFixed(4)} SOL` : '—', color: agent ? (agent.totalPnl >= 0 ? C.green : C.red) : C.dimmer },
+                { label: 'Started', value: agent?.startBalance ? `${agent.startBalance.toFixed(3)} SOL` : '—', color: C.dimmer },
+                { label: 'Real PnL', value: agent ? `${agent.totalPnl >= 0 ? '+' : ''}${agent.totalPnl.toFixed(4)} SOL` : '—', color: agent ? (agent.totalPnl >= 0 ? C.green : C.red) : C.dimmer },
                 { label: 'Win Rate', value: agent ? `${agent.winRate}% (${agent.wins}W/${agent.losses}L)` : '—', color: agent ? (agent.winRate >= 50 ? C.green : C.amber) : C.dimmer },
                 { label: 'Active Holds', value: agent ? `${agent.holdings.length}` : '—', color: agent?.holdings.length ? C.accent : C.dimmer },
                 { label: 'Tokens Scanned', value: agent ? `${agent.exitedCount}+` : '—', color: agent ? C.text : C.dimmer },

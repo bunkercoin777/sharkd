@@ -849,10 +849,14 @@ async function syncState(bal) {
     mint, symbol: p.symbol, buySol: p.buySol, buyTime: p.buyTime, isBonding: p.isBonding, meta: p.meta,
   }));
   const total = wins + losses;
+  const realPnl = bal - startBalance;  // honest PnL from actual balance change
   await updateState('agent', {
     status: 'online',
     balance: bal,
-    wins, losses, totalPnl,
+    startBalance,
+    wins, losses,
+    totalPnl: realPnl,  // use real balance diff, not just tracked trades
+    tradePnl: totalPnl,  // tracked trade PnL for comparison
     winRate: total > 0 ? Math.round((wins / total) * 100) : 0,
     holdings: holdingsArr,
     cycle,
@@ -866,6 +870,7 @@ async function syncState(bal) {
 }
 
 const startTime = Date.now();
+let startBalance = 0;
 
 async function main() {
   console.log('=== SharkD Headless Trading Agent v2 ===');
@@ -881,6 +886,7 @@ async function main() {
   console.log(`Buy sizes: GRAD ${GRAD_BASE_BUY}-${GRAD_MAX_BUY} SOL | BOND ${BOND_BASE_BUY}-${BOND_MAX_BUY} SOL`);
   console.log('');
 
+  startBalance = bal;
   log('BOOT', `Agent online. Balance: ${bal.toFixed(4)} SOL. Scanning ${CYCLE_MS/1000}s cycles.`, 'system');
 
   if (bal < 0.05) {

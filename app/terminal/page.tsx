@@ -21,6 +21,7 @@ interface AgentState {
 interface Thought { tag: string; message: string; type: string; created_at: string; }
 interface Trade { type: string; symbol: string; amount_sol: number; score: number; meta: string; pnl_sol: number; pnl_pct: number; reason: string; result: string; tx: string; balance_after: number; created_at: string; }
 interface Skill { name: string; description: string; data: Record<string, unknown>; created_at: string; }
+interface LeaderboardEntry { symbol: string; pnl_sol: number; pnl_pct: number; amount_sol: number; result: string; reason: string; created_at: string; }
 
 function tagColor(tag: string) {
   if (['BUY', 'BOUGHT', 'TARGET'].includes(tag)) return C.accent;
@@ -54,6 +55,7 @@ export default function Terminal() {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [online, setOnline] = useState(false);
   const feedRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +71,7 @@ export default function Terminal() {
         if (data.thoughts) setThoughts(data.thoughts);
         if (data.trades) setTrades(data.trades);
         if (data.skills) setSkills(data.skills);
+        if (data.leaderboard) setLeaderboard(data.leaderboard);
       } catch {}
     }
     poll();
@@ -272,6 +275,72 @@ export default function Terminal() {
               <p style={{ fontFamily: C.mono, fontSize: 12, color: C.dim }}>No trades yet. Trades will appear here when the agent goes live.</p>
             </div>
           )}
+        </div>
+
+        {/* Leaderboard */}
+        <div style={{ marginTop: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="two-col">
+          {/* Top Wins */}
+          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.green }} />
+              <span style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: 1, color: C.white }}>TOP WINS</span>
+            </div>
+            {leaderboard.filter(e => e.result === 'win').length > 0 ? (
+              <div>
+                {leaderboard.filter(e => e.result === 'win').slice(0, 8).map((e, i) => (
+                  <div key={i} style={{ padding: '10px 20px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <span style={{ fontFamily: C.mono, fontSize: 14, fontWeight: 800, color: C.dimmer, minWidth: 24 }}>#{i + 1}</span>
+                      <div>
+                        <span style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 700, color: C.white }}>${e.symbol || '???'}</span>
+                        <span style={{ fontFamily: C.mono, fontSize: 9, color: C.dim, marginLeft: 8 }}>{e.amount_sol?.toFixed(3)} SOL in</span>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontFamily: C.mono, fontSize: 13, fontWeight: 800, color: C.green }}>+{e.pnl_pct?.toFixed(1)}%</div>
+                      <div style={{ fontFamily: C.mono, fontSize: 9, color: C.green }}>+{e.pnl_sol?.toFixed(4)} SOL</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ padding: '30px 20px', textAlign: 'center' }}>
+                <p style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>No wins yet.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Worst Losses */}
+          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden' }}>
+            <div style={{ padding: '14px 20px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: C.red }} />
+              <span style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 700, letterSpacing: 1, color: C.white }}>WORST LOSSES</span>
+              <span style={{ fontFamily: C.mono, fontSize: 9, color: C.dim, marginLeft: 'auto' }}>transparency is the point</span>
+            </div>
+            {leaderboard.filter(e => e.result === 'loss').length > 0 ? (
+              <div>
+                {leaderboard.filter(e => e.result === 'loss').reverse().slice(0, 8).map((e, i) => (
+                  <div key={i} style={{ padding: '10px 20px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <span style={{ fontFamily: C.mono, fontSize: 14, fontWeight: 800, color: C.dimmer, minWidth: 24 }}>#{i + 1}</span>
+                      <div>
+                        <span style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 700, color: C.white }}>${e.symbol || '???'}</span>
+                        <span style={{ fontFamily: C.mono, fontSize: 9, color: C.dim, marginLeft: 8 }}>{e.reason || 'stop loss'}</span>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontFamily: C.mono, fontSize: 13, fontWeight: 800, color: C.red }}>{e.pnl_pct?.toFixed(1)}%</div>
+                      <div style={{ fontFamily: C.mono, fontSize: 9, color: C.red }}>{e.pnl_sol?.toFixed(4)} SOL</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ padding: '30px 20px', textAlign: 'center' }}>
+                <p style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>No losses yet.</p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Architecture section */}

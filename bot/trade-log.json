@@ -61,8 +61,160 @@
       "meta": "matches \"yara\" meta (6 tokens)",
       "time": 1771821062008,
       "tx": "2nKMZ64FF2JvgKoEcWaXzxSg2wWFYazHywS82qbFTjtxCfkqjUuHE2zxaMyUgvZuvtrEkyFNY96VYwTRRy5H6maR"
+    },
+    {
+      "type": "buy",
+      "token": "CJNG",
+      "mint": "b1pEVn3dzPGyqCivgYZWSFxzcqdbKhusr4ND4bQpump",
+      "amount": 0.05,
+      "score": 9,
+      "meta": "matches \"cartel\" meta (10 tokens)",
+      "time": 1771821269686,
+      "tx": "4Fyw8zm6KpyRqFoJp5hM32kaeLsBu598xKmgveikrCNepyR8YbbWerX4MdeSnsCawSjPJx77ZvsCorJHHtUHrZdR"
+    },
+    {
+      "type": "sell",
+      "token": "Yara",
+      "mint": "8C8sgpB7rJQT4z6XWJJ66vAwspxcxNHmAQgfsc4Kpump",
+      "pnl": -0.025904813000000002,
+      "pnlPct": -51.809625999999994,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.845117617,
+      "time": 1771821303152,
+      "tx": "3hk9MrdkQMLHuRp2jUWVuVXwKPTwuwxzQJfvunNhhwcofzNiMgfMLQvTDfxexuXDAuQxNQo23NtoAQ1hwWRWk72u"
+    },
+    {
+      "type": "buy",
+      "token": "ROSClaw",
+      "mint": "23daKhFcKK24AHBojh89wRmVb9Lmh6BuMSeKjmrqTQUX",
+      "amount": 0.05,
+      "score": 12,
+      "meta": null,
+      "time": 1771821313046,
+      "tx": "UmHQcQSdBKV83v8YHGyAzgaULH3ukpbgvcn8gFGmWsNXyk45UTk1Mvk71M1qYRsT7CKDZxCj1F6uSGVVKsHCwTS"
+    },
+    {
+      "type": "buy",
+      "token": "MetaHuman",
+      "mint": "AB8AmRogN2DWegaoTMFmsnMnPgvjHS1eodRNxSVnpump",
+      "amount": 0.05,
+      "score": 8,
+      "meta": "matches \"autonomous\" meta (5 tokens)",
+      "time": 1771821353902,
+      "tx": "2W2mga6SU5eVyZEg242ciCStdJCFoCCExbPDWDtY8Dhg2gPzK9KvmZHXSoVvZBYVs3CnU4fzc6Y6rChR7kciSpi3"
+    },
+    {
+      "type": "sell",
+      "token": "CJNG",
+      "mint": "b1pEVn3dzPGyqCivgYZWSFxzcqdbKhusr4ND4bQpump",
+      "pnl": 0.007423218999999995,
+      "pnlPct": 14.84643799999999,
+      "reason": "take profit",
+      "result": "win",
+      "balance": 4.798447426,
+      "time": 1771821453807,
+      "tx": "67LXAX3GeAkWGpw9QSdNAMBHPX7wa41TKfq2HABzxe3YqQS1zYSzEqeZxSJ5pCaGMn9aNUzrEmMQ6U8q3pLGzpXe"
+    },
+    {
+      "type": "sell",
+      "token": "ROSClaw",
+      "mint": "23daKhFcKK24AHBojh89wRmVb9Lmh6BuMSeKjmrqTQUX",
+      "pnl": -0.0036795520000000026,
+      "pnlPct": -7.359104000000006,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.844533657,
+      "time": 1771821463804,
+      "tx": "3bbXt9w8nrQWhMFYbSKDpXGMa7vc3nH8kbcEq2M3zoUMb4XV7Nc9mnfM15HY5pibrhSPx3yuP8HTLVL4pNWQsFyy"
+    },
+    {
+      "type": "buy",
+      "token": "WM",
+      "mint": "B3jXAEfVBY8VewDy1vfhRZGuh97Q5PVaXJfBzeMvpump",
+      "amount": 0.05,
+      "score": 12,
+      "meta": "matches \"world\" meta (10 tokens)",
+      "time": 1771821475534,
+      "tx": "4FJtEHfFR58uVsSn4jBPFtye33WtBCjQwcBZecv9ns4iUJHj9C1Kidi73FDtsZygiuDATsufzGbDfNJ5GFReeEzz"
+    },
+    {
+      "type": "buy",
+      "token": "Lobstarism",
+      "mint": "HmV9Y1hr8KrKzJtW44QbgTVSW5XH4cv7gp1VNBzTpump",
+      "amount": 0.05,
+      "score": 10,
+      "meta": "matches \"lobstar\" meta (5 tokens)",
+      "time": 1771821585868,
+      "tx": "7UGDYfjqp9mq9BGEdUAPhfYstxeTtRwv6WSDknzbejKpXtoziWjpCSePznMjHeM26fLj2g63SfzdmAdMwoiMUZE"
+    },
+    {
+      "type": "sell",
+      "token": "MetaHuman",
+      "mint": "AB8AmRogN2DWegaoTMFmsnMnPgvjHS1eodRNxSVnpump",
+      "pnl": -0.002822714000000004,
+      "pnlPct": -5.645428000000008,
+      "reason": "stale cut — dumping",
+      "result": "loss",
+      "balance": 4.787411453,
+      "time": 1771821619412,
+      "tx": "4zofSbbyXeHqr6cTcoZymwtB8Xtrx7Kpd3J5gyKSJUSMUG2d58ZJSHuKfmUsnEfzzrRb1KjNhZnMEbDX46anxdvt"
+    },
+    {
+      "type": "buy",
+      "token": "ROSCLAW",
+      "mint": "BVdMM5Fd7MxcTExnokXZzmCtiLvd2Es5zZQqRLNmrzSy",
+      "amount": 0.05,
+      "score": 9,
+      "meta": null,
+      "time": 1771821632437,
+      "tx": "5E2CJ6jizkCHTA6zEo25XGCSPmPffPHtTRJKxhHdWGRuPHUR3sFNRBhYSHofUG9oNGnXSdNN7LMWXtEHi9DxEU8p"
+    },
+    {
+      "type": "sell",
+      "token": "ROSCLAW",
+      "mint": "BVdMM5Fd7MxcTExnokXZzmCtiLvd2Es5zZQqRLNmrzSy",
+      "pnl": -0.008773228000000001,
+      "pnlPct": -17.546456000000003,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.776301346,
+      "time": 1771821668387,
+      "tx": "4AZZjApoUHWp395hUtPaFh2AzzBocBeatBqhsiWV8YEz8zC5NDiouKgCCUUyhhyk2a6d95jS2YBS4ggTopm8Xypd"
+    },
+    {
+      "type": "buy",
+      "token": "PUNCHBACK",
+      "mint": "FpJKGvJFyixJWQjbjYh6AuxDVQgQMTcUWptz8byCpump",
+      "amount": 0.05,
+      "score": 8,
+      "meta": "matches \"punch\" meta (9 tokens)",
+      "time": 1771821678075,
+      "tx": "8bM9Kjqh7wM73Xr8AVxkM8FN85b82qPSsCKM3kRqb9N2oQiWUXFHKBV5nxh7nLYkb4tk4iNN8mox3E47tBRjNqj"
+    },
+    {
+      "type": "sell",
+      "token": "WM",
+      "mint": "B3jXAEfVBY8VewDy1vfhRZGuh97Q5PVaXJfBzeMvpump",
+      "pnl": -0.0009437990000000021,
+      "pnlPct": -1.887598000000004,
+      "reason": "stale cut — dumping",
+      "result": "loss",
+      "balance": 4.773080938,
+      "time": 1771821780394,
+      "tx": "5WQxPw5RTniC8FC5JHMf3QgqxQz2AzqL3pgRUpjTYnuQ4nuH2Y3SnE7p1nETPF2Y4R83SbgFDhFFAYQ73gHSYUh3"
+    },
+    {
+      "type": "buy",
+      "token": "TrenchAI",
+      "mint": "AaWVpk6eZbgBfVbq1UfXw3EXBmAvw4QXov1xHuG7pump",
+      "amount": 0.05,
+      "score": 7,
+      "meta": "matches \"trenches\" meta (5 tokens)",
+      "time": 1771821791673,
+      "tx": "57m7GiP86CQ8GsGP43VgwCiEgULA3Gtzv4RGaoXkd4jdoAZsAYAmwvy3V1irFFPbtiuxdDgor9WmmpgXmn2xU5JL"
     }
   ],
-  "lastTrade": 1771821062008,
+  "lastTrade": 1771821791673,
   "lastPost": null
 }

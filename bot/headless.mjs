@@ -3,12 +3,14 @@
 // Graduated (PumpSwap via Jupiter) + Bonding Curve (PumpPortal).
 // Narrative detection, holder analysis, momentum tracking, dynamic stale cuts.
 // Trade log → trade-log.json for X posting. Skill log → skill-log.json.
+// All state → Neon PostgreSQL for live terminal at sharkd.fun/terminal.
 
 import { Connection, Keypair, PublicKey, VersionedTransaction } from '@solana/web3.js';
 import bs58 from 'bs58';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { initDB, logThought, logTrade as dbLogTrade, updateState, logSkill as dbLogSkill } from './db.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RPC = process.env.RPC_URL;
@@ -37,16 +39,16 @@ const GRAD_TP = 15;            // take profit %
 const GRAD_SL = -8;            // stop loss %
 const GRAD_STALE_MIN = 3;     // min hold (dumping)
 const GRAD_STALE_MAX = 10;    // max hold (recovering)
-const GRAD_BASE_BUY = 0.05;   // start small with new wallet
-const GRAD_MAX_BUY = 0.25;    // scale up with win rate
+const GRAD_BASE_BUY = 0.02;   // start micro, scale with performance
+const GRAD_MAX_BUY = 0.20;    // earned through win rate
 
 // Bonding Curve — pump.fun pre-graduation
 const BOND_TP = 25;            // higher TP — bonding tokens can 2-5x fast
 const BOND_SL = -12;           // wider SL — more volatile
 const BOND_STALE_MIN = 1;     // cut fast — bonding tokens die quick
 const BOND_STALE_MAX = 4;
-const BOND_BASE_BUY = 0.03;
-const BOND_MAX_BUY = 0.15;
+const BOND_BASE_BUY = 0.015;
+const BOND_MAX_BUY = 0.10;
 const BOND_MIN_BONDING_PCT = 60;  // only buy 60%+ bonded (close to graduation)
 const BOND_MIN_REPLIES = 8;
 
@@ -68,9 +70,10 @@ let wins = 0, losses = 0, totalPnl = 0, cycle = 0;
 // LOGGING
 // ══════════════════════════════════════════════════════════════
 
-function log(tag, msg) {
+function log(tag, msg, dbType = 'scan') {
   const t = new Date().toLocaleTimeString('en-AU', { timeZone: 'Australia/Sydney', hour12: true });
   console.log(`[${t}] [${tag}] ${msg}`);
+  logThought(tag, msg, dbType).catch(() => {});
 }
 
 function saveTradeLog(trade) {
@@ -81,6 +84,7 @@ function saveTradeLog(trade) {
   data.lastTrade = Date.now();
   if (data.trades.length > 200) data.trades = data.trades.slice(-100);
   fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  dbLogTrade(trade).catch(() => {});
 }
 
 function saveSkillLog(skill) {
@@ -90,6 +94,7 @@ function saveSkillLog(skill) {
   data.skills.push({ ...skill, time: Date.now() });
   if (data.skills.length > 50) data.skills = data.skills.slice(-25);
   fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  dbLogSkill(skill).catch(() => {});
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -659,14 +664,44 @@ function analyzeAndLearn() {
 // MAIN LOOP
 // ══════════════════════════════════════════════════════════════
 
+async function syncState(bal) {
+  const holdingsArr = [...positions.entries()].map(([mint, p]) => ({
+    mint, symbol: p.symbol, buySol: p.buySol, buyTime: p.buyTime, isBonding: p.isBonding, meta: p.meta,
+  }));
+  const total = wins + losses;
+  await updateState('agent', {
+    status: 'online',
+    balance: bal,
+    wins, losses, totalPnl,
+    winRate: total > 0 ? Math.round((wins / total) * 100) : 0,
+    holdings: holdingsArr,
+    cycle,
+    exitedCount: exitedMints.size,
+    riskMode: 'balanced',
+    gradBuy: getBuyAmount(false),
+    bondBuy: getBuyAmount(true),
+    uptime: Date.now() - startTime,
+    lastUpdate: Date.now(),
+  });
+}
+
+const startTime = Date.now();
+
 async function main() {
   console.log('=== SharkD Headless Trading Agent v2 ===');
   console.log(`Wallet: ${WALLET}`);
+
+  await initDB();
+  console.log('[DB] Connected to Neon PostgreSQL');
+
   const bal = await getBalance();
   console.log(`Balance: ${bal.toFixed(4)} SOL`);
   console.log(`Params: GRAD TP=${GRAD_TP}% SL=${GRAD_SL}% | BOND TP=${BOND_TP}% SL=${BOND_SL}%`);
   console.log(`Max positions: ${MAX_POSITIONS} | Cycle: ${CYCLE_MS / 1000}s`);
+  console.log(`Buy sizes: GRAD ${GRAD_BASE_BUY}-${GRAD_MAX_BUY} SOL | BOND ${BOND_BASE_BUY}-${BOND_MAX_BUY} SOL`);
   console.log('');
+
+  log('BOOT', `Agent online. Balance: ${bal.toFixed(4)} SOL. Scanning ${CYCLE_MS/1000}s cycles.`, 'system');
 
   if (bal < 0.05) {
     console.log('WARNING: Balance very low. Fund wallet before trading.');
@@ -680,8 +715,12 @@ async function main() {
 
       // Learn every 10 trades
       if ((wins + losses) > 0 && (wins + losses) % 10 === 0) analyzeAndLearn();
+
+      // Sync state to DB for live terminal
+      const bal = await getBalance();
+      await syncState(bal);
     } catch (e) {
-      log('ERROR', `Cycle ${cycle}: ${e.message}`);
+      log('ERROR', `Cycle ${cycle}: ${e.message}`, 'error');
     }
     await sleep(CYCLE_MS);
   }

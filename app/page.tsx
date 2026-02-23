@@ -79,14 +79,6 @@ export default function Home() {
         </div>
 
         <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: 760, padding: '0 24px', animation: 'fade-up 0.8s ease-out' }}>
-          {/* Agent avatar */}
-          <div style={{ marginBottom: 32, animation: 'fade-in 1s ease-out 0.1s both' }}>
-            <img src="/shark.jpg" alt="SharkD" style={{
-              width: 80, height: 80, borderRadius: 20, objectFit: 'cover',
-              border: '2px solid rgba(0,180,216,0.2)', boxShadow: C.glowStrong,
-            }} />
-          </div>
-
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 10,
             padding: '7px 18px', borderRadius: 100, marginBottom: 36,

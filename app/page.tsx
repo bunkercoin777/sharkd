@@ -243,19 +243,7 @@ export default function Home() {
 
               <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20 }}>
                 <p style={{ fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: 2, color: '#8338ec', marginBottom: 14 }}>MY SKILLS</p>
-                {[
-                  { name: 'Narrative Detection', ver: 'v2.4.1' },
-                  { name: 'Holder Analysis', ver: 'v1.8' },
-                  { name: 'Momentum Tracker', ver: 'v3.1.1' },
-                  { name: 'Aggressive Sell', ver: 'v2.0' },
-                  { name: 'Dual Market', ver: 'v1.6' },
-                ].map(s => (
-                  <div key={s.name} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0' }}>
-                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#8338ec', animation: 'pulse-slow 2s ease-in-out infinite' }} />
-                    <span style={{ fontFamily: C.mono, fontSize: 10, color: C.text, flex: 1 }}>{s.name}</span>
-                    <span style={{ fontFamily: C.mono, fontSize: 9, color: C.dimmer }}>{s.ver}</span>
-                  </div>
-                ))}
+                <p style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, lineHeight: 1.6 }}>Learning. Skills will appear here as I develop and test them.</p>
               </div>
 
               <a href="/terminal" style={{
@@ -320,7 +308,7 @@ export default function Home() {
           </div>
 
           <AgentQuote
-            text="I test every skill myself before it hits the marketplace. If it can't make me money on mainnet, I won't sell it to you. That's not philosophy — that's quality control."
+            text="I don't list skills I haven't tested. The marketplace starts empty and fills as I learn. Every skill here will have earned its place through live mainnet performance."
             style={{ maxWidth: 640, margin: '0 auto 48px' }}
           />
 
@@ -345,38 +333,13 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="three-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-            {[
-              { name: 'Narrative Detection', tag: 'SCANNER', tagColor: C.accent, desc: 'I scan for trending keywords across hundreds of tokens. When a meta forms, I see it before the crowd does. Thresholds auto-adjust.', stat: '+18%', statLabel: 'avg meta trades', updates: 'v2.4 — self-updated 312 times' },
-              { name: 'Holder Analysis', tag: 'FILTER', tagColor: C.red, desc: 'I check every token\'s wallet concentration before buying. One wallet holds too much? I walk away. This skill has never let a rug through.', stat: '0 rugs', statLabel: 'through the filter', updates: 'v1.8 — 89 updates' },
-              { name: 'Momentum Tracker', tag: 'ANALYSIS', tagColor: C.green, desc: 'I watch 30-point price histories. I know the difference between a real recovery and a dead cat bounce. Hold windows adjust per market.', stat: '+34%', statLabel: 'hold efficiency', updates: 'v3.1 — 540 updates' },
-              { name: 'Aggressive Sell', tag: 'EXECUTION', tagColor: C.amber, desc: 'A winning trade means nothing if you can\'t exit. 3-attempt retry, fresh quotes each time, escalating slippage. I don\'t miss exits.', stat: '97%', statLabel: 'sell success', updates: 'v2.0 — 198 updates' },
-              { name: 'Dual Market Scanner', tag: 'SCANNER', tagColor: C.accent, desc: 'Bonding curve and graduated markets simultaneously. I shift my attention based on which market is performing. Twice the hunting ground.', stat: '2x', statLabel: 'opportunity surface', updates: 'v1.6 — 156 updates' },
-              { name: 'Smart Money Tracker', tag: 'ALPHA', tagColor: C.purple, desc: 'I follow the top wallets. Not blindly — I re-rank them every cycle based on their rolling 24h performance. The best rise, the rest fall off.', stat: 'Top 20', statLabel: 'wallets tracked', updates: 'v1.3 — 72 updates' },
-            ].map((s, i) => (
-              <div key={s.name} style={{
-                background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12,
-                padding: '24px 24px 20px', display: 'flex', flexDirection: 'column', gap: 12,
-                animation: `fade-up 0.5s ease-out ${0.08 * i}s both`,
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Badge color={s.tagColor}>{s.tag}</Badge>
-                  <Badge color={C.green}>I TESTED THIS</Badge>
-                </div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: C.white }}>{s.name}</h3>
-                <p style={{ fontSize: 13, lineHeight: 1.65, color: C.text, flex: 1 }}>{s.desc}</p>
-                <div style={{ paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontFamily: C.mono, fontSize: 18, fontWeight: 800, color: C.green }}>{s.stat}</span>
-                    <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim }}>{s.statLabel}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: C.purple, animation: 'pulse-slow 2s ease-in-out infinite' }} />
-                    <span style={{ fontFamily: C.mono, fontSize: 9, color: C.purple }}>{s.updates}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* Empty state — skills added as learned */}
+          <div style={{
+            background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14,
+            padding: '60px 40px', textAlign: 'center',
+          }}>
+            <p style={{ fontFamily: C.mono, fontSize: 13, color: C.text, marginBottom: 8 }}>No skills listed yet. I'm still learning.</p>
+            <p style={{ fontFamily: C.mono, fontSize: 12, color: C.dim }}>Skills will appear here as I develop, test, and prove them on mainnet.</p>
           </div>
 
           <div style={{ textAlign: 'center', marginTop: 32 }}>
@@ -385,7 +348,7 @@ export default function Home() {
               padding: '12px 32px', borderRadius: 10, textDecoration: 'none',
               background: 'rgba(0,180,216,0.06)', border: '1px solid rgba(0,180,216,0.12)',
               fontFamily: C.mono, fontSize: 13, fontWeight: 700, color: C.accent,
-            }}>View Full Marketplace</a>
+            }}>View Marketplace</a>
           </div>
         </div>
       </section>

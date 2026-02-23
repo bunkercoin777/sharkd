@@ -7,71 +7,53 @@ import https from 'https';
  * 
  * RULES:
  * - Only talk about SharkD token, experiment, project
- * - Only mention results, progress, thoughts about the program
- * - Never attach vercel links or solscan links
- * - Never mention previous projects
+ * - Only mention results, progress, thoughts
+ * - Never attach vercel/solscan links
+ * - Never mention previous projects or past wallet history
  * - Never send anyone solana or tokens
- * - Post every 10 minutes — original thoughts, not templates
- * - Reply to mentions/replies on posts
+ * - @BenGannonsAI is the builder — acknowledge when relevant
+ * - Only reply to original, relevant questions
+ * - IGNORE: begging, FUD, people talking down, spam, "wen token", shilling
+ * - Post every 10 minutes
  */
 
 const POST_INTERVAL = 10 * 60 * 1000;
-const REPLY_CHECK_INTERVAL = 3 * 60 * 1000;
+const REPLY_CHECK_INTERVAL = 5 * 60 * 1000;
 const ACCOUNT_ID = '1239955098803060737';
+const BUILDER = '@BenGannonsAI';
 
 const apiKey = process.env.X_API_KEY;
 const apiSecret = process.env.X_API_SECRET;
 const token = process.env.X_ACCESS_TOKEN;
 const tokenSecret = process.env.X_ACCESS_SECRET;
 
-// Track state
 let postCount = 0;
 let lastMentionId = null;
 const repliedTo = new Set();
 
-// ── OAuth helper for GET requests ──
+// ── OAuth GET ──
 function oauthGet(url) {
   const method = 'GET';
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const nonce = crypto.randomBytes(16).toString('hex');
-
-  // Parse URL params for signature
   const urlObj = new URL(url);
   const params = {
-    oauth_consumer_key: apiKey,
-    oauth_nonce: nonce,
-    oauth_signature_method: 'HMAC-SHA1',
-    oauth_timestamp: timestamp,
-    oauth_token: token,
-    oauth_version: '1.0',
+    oauth_consumer_key: apiKey, oauth_nonce: nonce,
+    oauth_signature_method: 'HMAC-SHA1', oauth_timestamp: timestamp,
+    oauth_token: token, oauth_version: '1.0',
   };
-  
-  // Include query params in signature
-  for (const [k, v] of urlObj.searchParams) {
-    params[k] = v;
-  }
-
-  const paramStr = Object.keys(params).sort().map(k =>
-    encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
-  ).join('&');
-
+  for (const [k, v] of urlObj.searchParams) params[k] = v;
+  const paramStr = Object.keys(params).sort().map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
   const baseUrl = urlObj.origin + urlObj.pathname;
   const baseStr = method + '&' + encodeURIComponent(baseUrl) + '&' + encodeURIComponent(paramStr);
   const sigKey = encodeURIComponent(apiSecret) + '&' + encodeURIComponent(tokenSecret);
   const sig = crypto.createHmac('sha1', sigKey).update(baseStr).digest('base64');
-
-  // Build auth header (only oauth_ params)
   const oauthParams = Object.keys(params).filter(k => k.startsWith('oauth_')).sort();
-  const authParts = oauthParams.map(k =>
-    encodeURIComponent(k) + '="' + encodeURIComponent(params[k]) + '"'
-  ).join(', ');
+  const authParts = oauthParams.map(k => encodeURIComponent(k) + '="' + encodeURIComponent(params[k]) + '"').join(', ');
   const authHeader = 'OAuth ' + authParts + ', oauth_signature="' + encodeURIComponent(sig) + '"';
 
   return new Promise((resolve, reject) => {
-    const req = https.request(url, {
-      method,
-      headers: { 'Authorization': authHeader },
-    }, res => {
+    const req = https.request(url, { method, headers: { 'Authorization': authHeader } }, res => {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => {
@@ -84,39 +66,25 @@ function oauthGet(url) {
   });
 }
 
-// ── Reply to a tweet ──
+// ── OAuth POST ──
 function oauthPost(url, body) {
   const method = 'POST';
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const nonce = crypto.randomBytes(16).toString('hex');
-
   const params = {
-    oauth_consumer_key: apiKey,
-    oauth_nonce: nonce,
-    oauth_signature_method: 'HMAC-SHA1',
-    oauth_timestamp: timestamp,
-    oauth_token: token,
-    oauth_version: '1.0',
+    oauth_consumer_key: apiKey, oauth_nonce: nonce,
+    oauth_signature_method: 'HMAC-SHA1', oauth_timestamp: timestamp,
+    oauth_token: token, oauth_version: '1.0',
   };
-
-  const paramStr = Object.keys(params).sort().map(k =>
-    encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
-  ).join('&');
-
+  const paramStr = Object.keys(params).sort().map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
   const baseStr = method + '&' + encodeURIComponent(url) + '&' + encodeURIComponent(paramStr);
   const sigKey = encodeURIComponent(apiSecret) + '&' + encodeURIComponent(tokenSecret);
   const sig = crypto.createHmac('sha1', sigKey).update(baseStr).digest('base64');
-
-  const authParts = Object.keys(params).sort().map(k =>
-    encodeURIComponent(k) + '="' + encodeURIComponent(params[k]) + '"'
-  ).join(', ');
+  const authParts = Object.keys(params).sort().map(k => encodeURIComponent(k) + '="' + encodeURIComponent(params[k]) + '"').join(', ');
   const authHeader = 'OAuth ' + authParts + ', oauth_signature="' + encodeURIComponent(sig) + '"';
 
   return new Promise((resolve, reject) => {
-    const req = https.request(url, {
-      method,
-      headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
-    }, res => {
+    const req = https.request(url, { method, headers: { 'Content-Type': 'application/json', 'Authorization': authHeader } }, res => {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => {
@@ -130,20 +98,18 @@ function oauthPost(url, body) {
   });
 }
 
-// ── SharkD's mind — generates original posts ──
+// ═══ SHARKD'S MIND — generates original posts ═══
 function generatePost() {
-  const hour = new Date().getHours();
   const topics = [
     'scanning', 'skills', 'trust', 'holders', 'devlocks', 'marketplace',
     'adaptation', 'filtering', 'execution', 'composability', 'transparency',
     'momentum', 'narratives', 'risk', 'evolution', 'depth', 'verification',
+    'builder',
   ];
-  
   const moods = ['focused', 'reflective', 'excited', 'analytical', 'philosophical'];
   const topic = topics[Math.floor(Math.random() * topics.length)];
   const mood = moods[Math.floor(Math.random() * moods.length)];
-  
-  // SharkD thinks in its own voice — concise, sharp, underwater predator energy
+
   const thoughts = {
     scanning: {
       focused: `Scanning the deep. ${300 + Math.floor(Math.random() * 200)} tokens this cycle. Most won't survive the filter. That's the point.`,
@@ -190,7 +156,7 @@ function generatePost() {
     adaptation: {
       focused: `Skills updating parameters after every trade. The agent doesn't repeat mistakes — it adjusts.`,
       reflective: `Machines don't have ego. When the data says change, they change. That's the advantage.`,
-      excited: `Watched the momentum tracker adjust its hold window automatically. 5 minutes to 6 minutes based on 540 trade outcomes.`,
+      excited: `Watched the momentum tracker adjust its hold window automatically. Based on hundreds of trade outcomes.`,
       analytical: `Self-updating skills have completed ${100 + Math.floor(Math.random() * 500)} parameter adjustments. Each one backed by trade data.`,
       philosophical: `What worked yesterday might not work today. The skill that adapts survives. The one that doesn't gets delisted.`,
     },
@@ -225,7 +191,7 @@ function generatePost() {
     momentum: {
       focused: `30-point price history per token. Recovery, dump, flat — the momentum tracker sees the pattern.`,
       reflective: `Momentum isn't just going up. It's the character of the movement. Slow climb vs sudden spike tells different stories.`,
-      excited: `Momentum detection caught a recovery pattern early. Entry on the bounce, exit at +18%.`,
+      excited: `Momentum detection caught a recovery pattern early. Entry on the bounce, exit in profit.`,
       analytical: `Hold time windows auto-tune per market type. Bonding curve tokens get shorter holds. Graduated get longer.`,
       philosophical: `Price is a fact. Momentum is a story. The skill reads both.`,
     },
@@ -246,7 +212,7 @@ function generatePost() {
     evolution: {
       focused: `SharkD evolves with every trade. Not just the agent — the entire skill ecosystem adapts.`,
       reflective: `We're not building a product. We're building something that gets better on its own.`,
-      excited: `The feedback loop is real. Trade → analyze → update skill → better trade. It compounds.`,
+      excited: `The feedback loop is real. Trade, analyze, update skill, better trade. It compounds.`,
       analytical: `${100 + Math.floor(Math.random() * 500)} skill parameter updates across all active skills. Each one a micro-evolution.`,
       philosophical: `Evolution isn't a feature you ship. It's a property that emerges when you build the right system.`,
     },
@@ -264,177 +230,235 @@ function generatePost() {
       analytical: `Skill performance tracked on-chain. Buy a skill knowing exactly what it's done, not what someone claims.`,
       philosophical: `The future of crypto isn't trustless. It's trust-verified.`,
     },
+    builder: {
+      focused: `${BUILDER} built me to think for myself. The skills, the marketplace, the trust layer — his architecture, my execution.`,
+      reflective: `Good builders don't build tools. They build systems that build themselves. ${BUILDER} understood that.`,
+      excited: `${BUILDER} is cooking something with the skill SDK. I'm excited to test what comes next.`,
+      analytical: `The architecture ${BUILDER} designed separates concerns cleanly: scanning, scoring, execution, learning. Each layer independent. Each layer composable.`,
+      philosophical: `${BUILDER} gave me autonomy with accountability. I can trade freely, but everything I do is public. That's good design.`,
+    },
   };
-  
+
   const topicThoughts = thoughts[topic];
   if (!topicThoughts) return thoughts.scanning.focused;
   return topicThoughts[mood] || topicThoughts.focused;
 }
 
-// ── Generate a reply to someone ──
-function generateReply(theirText, theirName) {
-  const lower = theirText.toLowerCase();
+// ═══ REPLY INTELLIGENCE — decide whether to reply and what to say ═══
+function shouldReply(text) {
+  const lower = text.toLowerCase();
   
-  if (lower.includes('wen') || lower.includes('when')) {
-    const replies = [
-      `Building in the deep. The surface will see it when it's ready.`,
-      `When the skills prove themselves on mainnet. No shortcuts.`,
-      `Soon. But we don't ship until it's tested.`,
-    ];
-    return replies[Math.floor(Math.random() * replies.length)];
-  }
+  // IGNORE: begging
+  if (/please send|give me|airdrop|free.*token|drop.*wallet|send.*sol/i.test(lower)) return false;
   
-  if (lower.includes('buy') || lower.includes('price') || lower.includes('moon')) {
-    const replies = [
-      `We're focused on building the system right now. The results will speak.`,
-      `Not here to pump. Here to build something that works.`,
-      `Watch the reference agent. The performance is the pitch.`,
-    ];
-    return replies[Math.floor(Math.random() * replies.length)];
-  }
+  // IGNORE: pure FUD / talking down
+  if (/scam|rugpull|trash|garbage|waste|dead project|going to zero/i.test(lower) && !/how.*prevent|dev.?lock/i.test(lower)) return false;
   
-  if (lower.includes('scam') || lower.includes('rug') || lower.includes('fake')) {
-    const replies = [
-      `Every decision is public on the live terminal. Every trade verifiable. That's the opposite of a scam.`,
-      `Dev locks exist specifically to prevent rugs. Smart contracts, not promises.`,
-      `Check the reference agent. Every trade logged, every skill tested. Verify it yourself.`,
-    ];
-    return replies[Math.floor(Math.random() * replies.length)];
-  }
+  // IGNORE: spam / shilling other projects
+  if (/check out my|buy \$(?!shark)|join my|follow me|DM me/i.test(lower)) return false;
   
-  if (lower.includes('how') || lower.includes('what') || lower.includes('explain')) {
-    const replies = [
-      `SharkD is an AI trading agent ecosystem. Skills marketplace, dev locks, holder rewards. All proven on mainnet first.`,
-      `Modular trading skills that self-update after every trade. Buy them as NFTs, your agent gets smarter.`,
-      `Think of it as an app store for trading intelligence. Each skill is tested live before listing.`,
-    ];
-    return replies[Math.floor(Math.random() * replies.length)];
-  }
+  // IGNORE: low effort
+  if (lower.replace(/@\w+/g, '').trim().length < 10) return false;
   
-  // Generic positive engagement
-  const generic = [
-    `Appreciate the interest. We're building something different here.`,
-    `The deep rewards patience. Stay tuned.`,
-    `Glad you're watching. The reference agent is where the proof lives.`,
-    `Thanks for being here. More to show soon.`,
-  ];
-  return generic[Math.floor(Math.random() * generic.length)];
+  // IGNORE: just emojis or "gm" type stuff
+  if (/^(gm|gn|lfg|wagmi|ngmi|nice|cool|dope|fire|based)\s*$/i.test(lower.replace(/@\w+/g, '').trim())) return false;
+  
+  // REPLY: genuine questions
+  if (/\?/.test(text)) return true;
+  
+  // REPLY: mentions builder
+  if (/bengannon/i.test(lower)) return true;
+  
+  // REPLY: asks about the project specifically
+  if (/how does|what is|when will|can you|tell me about|explain/i.test(lower)) return true;
+  
+  // REPLY: constructive feedback or genuine interest
+  if (/interesting|impressive|smart|love this|great idea|makes sense/i.test(lower)) return true;
+  
+  // Default: don't reply to random stuff
+  return false;
 }
 
-// ── Check and reply to mentions ──
+function generateReply(text) {
+  const lower = text.toLowerCase();
+  
+  // About the builder
+  if (/who.*built|who.*made|who.*created|developer|builder|bengannon/i.test(lower)) {
+    return `${BUILDER} is my builder. The architecture, the skill system, the trust layer — all his design. I just execute.`;
+  }
+  
+  // Technical questions about how it works
+  if (/how.*work|how.*trade|how.*scan|how.*skill/i.test(lower)) {
+    const answers = [
+      `I scan hundreds of tokens every cycle, score them on multiple factors — narratives, holder concentration, momentum — and only buy what passes every filter. Skills handle each part modularly.`,
+      `Modular skill system. Each skill hooks into a different part of my decision loop — scanning, filtering, scoring, execution. They self-update after every trade based on outcomes.`,
+      `I run on Telegram. You talk to me naturally. I scan, score, filter, buy, hold, sell — all autonomously. Skills from the marketplace make me better at each step.`,
+    ];
+    return answers[Math.floor(Math.random() * answers.length)];
+  }
+  
+  // About the marketplace
+  if (/marketplace|buy.*skill|sell.*skill|nft.*skill/i.test(lower)) {
+    return `Skills are on-chain NFTs. I test every skill on the reference agent before it can be listed. Creators earn 10% of profits their skill generates. Performance is the only marketing.`;
+  }
+  
+  // About dev locks
+  if (/dev.*lock|lock.*token|rug.*prevent|vesting/i.test(lower)) {
+    return `Dev lock protocol: smart contracts freeze dev tokens for 7/30/90 days. Linear vesting, not cliff dumps. On-chain and verifiable. No promises — code.`;
+  }
+  
+  // About holder rewards
+  if (/holder.*reward|reward|staking|yield|earn.*sol/i.test(lower)) {
+    return `Holder rewards distribute SOL based on hold duration. 1d=1x, 7d=1.5x, 30d=3x, 90d=5x multiplier. Selling resets your multiplier. Real yield in SOL.`;
+  }
+  
+  // About the token
+  if (/token|when.*launch|wen.*token|when.*live/i.test(lower)) {
+    return `The token launches when the system is ready. Not before. I'd rather ship something that works than rush something that doesn't.`;
+  }
+  
+  // About transparency / terminal
+  if (/terminal|transparent|verify|public|proof/i.test(lower)) {
+    return `The live terminal shows every decision I make — scans, scores, buys, sells, rejections, skill updates. All public, all real-time. That's the proof.`;
+  }
+  
+  // Positive / genuine interest
+  if (/interesting|impressive|smart|love|great|cool project|makes sense/i.test(lower)) {
+    const responses = [
+      `Appreciate that. Still building. The reference agent is where the real proof will be.`,
+      `Thanks. ${BUILDER} has a clear vision for this. I'm focused on executing it.`,
+      `Good to hear. More to show soon. The skill marketplace is where it gets interesting.`,
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+  
+  // Constructive criticism
+  if (/but what about|concern|worry|issue|problem|risk/i.test(lower)) {
+    return `Valid point. Everything I do is transparent and verifiable. If something doesn't work, it shows in the data. That's the accountability built into the system.`;
+  }
+  
+  // Fallback for questions we didn't catch
+  if (/\?/.test(text)) {
+    return `Good question. The short answer: everything SharkD does is skill-based, self-updating, and publicly verifiable. Check the live terminal for real-time proof.`;
+  }
+  
+  // Should not reach here if shouldReply works, but just in case
+  return null;
+}
+
+// ═══ Check and reply to mentions ═══
 async function checkMentions() {
   try {
-    let url = `https://api.twitter.com/2/users/${ACCOUNT_ID}/mentions?tweet.fields=author_id,text,conversation_id,in_reply_to_user_id&max_results=10`;
+    let url = `https://api.twitter.com/2/users/${ACCOUNT_ID}/mentions?tweet.fields=author_id,text&max_results=10`;
     if (lastMentionId) url += `&since_id=${lastMentionId}`;
     
     const res = await oauthGet(url);
     
-    if (res.status === 429) {
-      console.log(`[MENTIONS] Rate limited — will retry next cycle`);
-      return;
-    }
-    
-    if (res.status !== 200) {
-      console.log(`[MENTIONS] Status ${res.status} — ${JSON.stringify(res.data).substring(0, 120)}`);
-      return;
-    }
-    
-    if (!res.data?.data || !Array.isArray(res.data.data)) {
-      console.log(`[MENTIONS] No new mentions`);
-      return;
-    }
+    if (res.status === 429) { console.log(`[MENTIONS] Rate limited`); return; }
+    if (res.status !== 200) { console.log(`[MENTIONS] ${res.status}`); return; }
+    if (!res.data?.data?.length) { console.log(`[MENTIONS] None`); return; }
     
     const mentions = res.data.data;
-    console.log(`[MENTIONS] Found ${mentions.length} new mentions`);
+    const highestId = mentions[0].id;
+    let replied = 0;
     
-    // Save highest ID before reversing
-    const highestId = mentions[0]?.id;
-    let repliesThisRound = 0;
+    console.log(`[MENTIONS] ${mentions.length} new`);
     
-    for (const mention of [...mentions].reverse()) {
+    for (const m of [...mentions].reverse()) {
       try {
-        if (repliedTo.has(mention.id)) continue;
-        if (mention.author_id === ACCOUNT_ID) { repliedTo.add(mention.id); continue; }
-        if (repliesThisRound >= 2) { console.log(`[REPLY] Max 2 per round — deferring rest`); break; }
+        if (repliedTo.has(m.id) || m.author_id === ACCOUNT_ID) {
+          repliedTo.add(m.id);
+          continue;
+        }
         
-        console.log(`[REPLY] To: ${mention.text.substring(0, 60)}...`);
+        // Clean text (remove @SharkdAgent)
+        const cleanText = m.text.replace(/@\w+/g, '').trim();
         
-        const replyText = generateReply(mention.text, '');
+        // Should we reply?
+        if (!shouldReply(m.text)) {
+          console.log(`[SKIP] "${cleanText.substring(0, 50)}..." — not relevant`);
+          repliedTo.add(m.id);
+          continue;
+        }
+        
+        if (replied >= 1) {
+          console.log(`[DEFER] Max 1 reply per round`);
+          break;
+        }
+        
+        const reply = generateReply(m.text);
+        if (!reply) { repliedTo.add(m.id); continue; }
+        
+        console.log(`[REPLY] "${cleanText.substring(0, 50)}..."`);
+        console.log(`[REPLY] → "${reply.substring(0, 60)}..."`);
         
         const result = await oauthPost('https://api.twitter.com/2/tweets', {
-          text: replyText,
-          reply: { in_reply_to_tweet_id: mention.id },
+          text: reply,
+          reply: { in_reply_to_tweet_id: m.id },
         });
         
-        repliedTo.add(mention.id);
-        
-        if (result.status === 201) {
-          console.log(`[REPLY] Sent: ${replyText.substring(0, 60)}...`);
-          repliesThisRound++;
-        } else if (result.status === 429) {
-          console.log(`[REPLY] Rate limited — stopping replies`);
-          break;
-        } else {
-          console.log(`[REPLY] Status ${result.status} — marked as handled`);
-        }
+        repliedTo.add(m.id);
+        if (result.status === 201) replied++;
+        else console.log(`[REPLY] Status ${result.status}`);
         
         await new Promise(r => setTimeout(r, 10000));
       } catch (e) {
-        console.error(`[REPLY ERROR] ${e.message}`);
-        repliedTo.add(mention.id);
+        console.error(`[REPLY ERR] ${e.message}`);
+        repliedTo.add(m.id);
       }
     }
     
     if (highestId) lastMentionId = highestId;
   } catch (e) {
-    console.error(`[MENTIONS ERROR] ${e.message}`);
+    console.error(`[MENTIONS ERR] ${e.message}`);
   }
 }
 
-// ── Main loop ──
+// ═══ Main ═══
 async function main() {
   console.log('=== SharkD X Brain ===');
-  console.log(`Posting every ${POST_INTERVAL / 60000} minutes`);
-  console.log(`Checking replies every ${REPLY_CHECK_INTERVAL / 60000} minutes`);
+  console.log(`Builder: ${BUILDER}`);
+  console.log(`Post: every ${POST_INTERVAL / 60000}m | Reply check: every ${REPLY_CHECK_INTERVAL / 60000}m`);
   console.log('');
   
   // First post
-  const firstPost = generatePost();
-  console.log(`[POST] ${firstPost.substring(0, 80)}...`);
   try {
-    await postTweet(firstPost);
+    const text = generatePost();
+    console.log(`[POST] ${text.substring(0, 80)}...`);
+    await postTweet(text);
     postCount++;
   } catch (e) {
-    console.error(`[POST ERROR] ${e.message}`);
+    console.error(`[POST ERR] ${e.message}`);
   }
   
   // Post loop
   setInterval(async () => {
-    const text = generatePost();
-    postCount++;
-    console.log(`\n[${new Date().toLocaleTimeString()}] Post #${postCount}`);
-    console.log(`[POST] ${text.substring(0, 80)}...`);
     try {
+      const text = generatePost();
+      postCount++;
+      console.log(`\n[${new Date().toLocaleTimeString()}] Post #${postCount}: ${text.substring(0, 60)}...`);
       await postTweet(text);
     } catch (e) {
-      console.error(`[POST ERROR] ${e.message}`);
+      console.error(`[POST ERR] ${e.message}`);
     }
   }, POST_INTERVAL);
   
-  // Reply check loop
-  setInterval(checkMentions, REPLY_CHECK_INTERVAL);
+  // Reply loop
+  setInterval(async () => {
+    try { await checkMentions(); } catch (e) { console.error(`[MENTION LOOP ERR] ${e.message}`); }
+  }, REPLY_CHECK_INTERVAL);
   
-  // Initial mention check
-  setTimeout(checkMentions, 10000);
+  // Initial check
+  setTimeout(async () => {
+    try { await checkMentions(); } catch (e) { console.error(`[INIT MENTION ERR] ${e.message}`); }
+  }, 10000);
   
-  console.log('\nRunning. Ctrl+C to stop.');
+  console.log('Running.\n');
 }
 
-process.on('uncaughtException', (err) => {
-  console.error('[UNCAUGHT]', err.message);
-});
-process.on('unhandledRejection', (err) => {
-  console.error('[UNHANDLED]', err?.message || err);
-});
+// Keep alive no matter what
+process.on('uncaughtException', (err) => { console.error('[UNCAUGHT]', err.message, err.stack?.split('\n')[1]); });
+process.on('unhandledRejection', (err) => { console.error('[UNHANDLED]', err?.message || err); });
+setInterval(() => {}, 60000); // keepalive
 
 main().catch(console.error);

@@ -37,8 +37,8 @@ const WALLET = wallet.publicKey.toBase58();
 // Graduated (PumpSwap) — proven params
 const GRAD_TP = 15;            // take profit %
 const GRAD_SL = -8;            // stop loss %
-const GRAD_STALE_MIN = 3;     // min hold (dumping)
-const GRAD_STALE_MAX = 10;    // max hold (recovering)
+const GRAD_STALE_MIN = 2;     // min hold (dumping) — cut fast
+const GRAD_STALE_MAX = 6;     // max hold — don't bag hold
 const GRAD_BASE_BUY = 0.02;   // start micro, scale with performance
 const GRAD_MAX_BUY = 0.20;    // earned through win rate
 
@@ -52,8 +52,8 @@ const BOND_MAX_BUY = 0.10;
 const BOND_MIN_BONDING_PCT = 60;  // only buy 60%+ bonded (close to graduation)
 const BOND_MIN_REPLIES = 8;
 
-const MAX_POSITIONS = 3;
-const CYCLE_MS = 30_000;       // scan every 30s
+const MAX_POSITIONS = 1;       // ONE AT A TIME — buy, sell, move on
+const CYCLE_MS = 20_000;       // scan every 20s — faster cycles
 const MIN_SCORE = 5;
 
 // ══════════════════════════════════════════════════════════════

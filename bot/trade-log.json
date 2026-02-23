@@ -569,8 +569,72 @@
       "meta": "matches \"lobstar\" meta (7 tokens)",
       "time": 1771824399174,
       "tx": "2nTfKedCPwvz9kfnhUaLwX9ynzH286T5GnHp6fyhitxvdzmyJd7uKeUmKrb2oCmTvtVrMvPaQQnRrP7LmgskGe4b"
+    },
+    {
+      "type": "sell",
+      "token": "starxxing",
+      "mint": "BnMsDWFW4tTZ3yhYkePCKDgPjniYrhDMtox28jTXpump",
+      "pnl": 0.001450334000000001,
+      "pnlPct": 7.251670000000004,
+      "reason": "stop loss",
+      "result": "win",
+      "balance": 4.703243031,
+      "time": 1771824506230,
+      "tx": "2gi9vQvRLtzz41GoWexHbtypkz63QBTQ3V2nvCzxZAXbCzXG7ayLkVDsFVSEGDPFSTjRhgr5HrGSzfL1cifuPAoc"
+    },
+    {
+      "type": "buy",
+      "token": "Yara",
+      "mint": "DUC8tUNw8xv6wLzwXqF2ad9vvZFkWSkVhqRzGzhyEKZL",
+      "amount": 0.02,
+      "score": 13,
+      "meta": "matches \"yara\" meta (6 tokens)",
+      "time": 1771824515991,
+      "tx": "5C5yxS82NKBQrDUeyjS5sRJU7uwqSRuMonRGSSNNo31nPeZLHvea3pXYuLR8TUqmiJFN8j372KtFnXxg8ZZ1DzjS"
+    },
+    {
+      "type": "buy",
+      "token": "ME",
+      "mint": "3wshHmD3aBx3wfHPeGWq2o38BNpVaEf7iFf3gYgRpump",
+      "amount": 0.02,
+      "score": 11,
+      "meta": "matches \"world\" meta (11 tokens)",
+      "time": 1771824661094,
+      "tx": "4uUWBz4CSitTiMVUnTkpsjqwAeTDz9o8C1B1eZGXwzDgXbFpZESpTbnCbkPapgnsJp6v9ox2v6L17tgV8sG27XBi"
+    },
+    {
+      "type": "buy",
+      "token": "FSC",
+      "mint": "BPJivqTmLmLDjfSn71gp8XaFYDXxNUuM85pMEWAcpump",
+      "amount": 0.02,
+      "score": 11,
+      "meta": "matches \"cat\" meta (9 tokens)",
+      "time": 1771824709125,
+      "tx": "evj7xUTDV3JPevxrLEW1kT523c34sfD1LSLvL8JBM6V8bXfXhG6DuJcTupS2MqxSQuTuRwRGzbAvAj6q2rgbyM5"
+    },
+    {
+      "type": "buy",
+      "token": "starxxing",
+      "mint": "BnMsDWFW4tTZ3yhYkePCKDgPjniYrhDMtox28jTXpump",
+      "amount": 0.02,
+      "score": 12,
+      "meta": "matches \"lobstar\" meta (8 tokens)",
+      "time": 1771824844074,
+      "tx": "JWDXmgsFjEayeWcSnwTxyqU5XTKGV5dfDpQMYmk3dR9rHFcf5M1yR6Ptk3XrapAmRdSzt8iwvwEr4dqumrpExfU"
+    },
+    {
+      "type": "sell",
+      "token": "starxxing",
+      "mint": "BnMsDWFW4tTZ3yhYkePCKDgPjniYrhDMtox28jTXpump",
+      "pnl": 0.0002064979999999994,
+      "pnlPct": 1.032489999999997,
+      "reason": "take profit",
+      "result": "win",
+      "balance": 4.641813414,
+      "time": 1771825115103,
+      "tx": "3cSLmR1WHsfPmi95vtpom1vb5LsqKbS1h4KGNiikTCGdB42XHVzoNsDWYgnLtvniKS4c9v7ZCDS45xaPg79onzh8"
     }
   ],
-  "lastTrade": 1771824399175,
+  "lastTrade": 1771825115103,
   "lastPost": 1771823400207
 }

@@ -55,7 +55,7 @@ export async function logThought(tag, message, type = 'scan') {
 export async function logTrade(trade) {
   try {
     await sql`INSERT INTO sharkd_trades (type, mint, symbol, name, amount_sol, score, meta, pnl_sol, pnl_pct, reason, result, tx, balance_after)
-      VALUES (${trade.type}, ${trade.mint || null}, ${trade.symbol || null}, ${trade.name || null}, ${trade.amount || null}, ${trade.score || null}, ${trade.meta || null}, ${trade.pnl || null}, ${trade.pnlPct || null}, ${trade.reason || null}, ${trade.result || null}, ${trade.tx || null}, ${trade.balance || null})`;
+      VALUES (${trade.type}, ${trade.mint || null}, ${trade.symbol || trade.token || null}, ${trade.name || trade.token || null}, ${trade.amount || null}, ${trade.score || null}, ${trade.meta || null}, ${trade.pnl || null}, ${trade.pnlPct || null}, ${trade.reason || null}, ${trade.result || null}, ${trade.tx || null}, ${trade.balance || null})`;
   } catch (e) { console.error('[DB] trade error:', e.message); }
 }
 

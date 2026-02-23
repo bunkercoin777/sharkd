@@ -299,8 +299,74 @@
       "meta": null,
       "time": 1771822903368,
       "tx": "5AoJqPejsZQJWku8XaA76vJWR3zYhEb468rfzrwy6MPdgiccZTTvqUJVTfTNXA2GQD4oWPYCsGG7ThtPR7y2QHf6"
+    },
+    {
+      "type": "buy",
+      "token": "NoLimit",
+      "mint": "4nURS6qxY9bCEhramG2VZfnphJZyzis5EE86w5qLpump",
+      "amount": 0.02,
+      "score": 10,
+      "meta": null,
+      "time": 1771823010058,
+      "tx": "3cYudqgXRH4teRh49CcQssFzHXguyXKEC3nT4wxuSw2AQxUhxxVRssgYsQyQP2G2Q3DS5fBuVzDXtWn3ipfMdhsv"
+    },
+    {
+      "type": "sell",
+      "token": "ROSClaw",
+      "mint": "23daKhFcKK24AHBojh89wRmVb9Lmh6BuMSeKjmrqTQUX",
+      "pnl": 0.012040539,
+      "pnlPct": 60.20269499999999,
+      "reason": "take profit",
+      "result": "win",
+      "balance": 4.734323134,
+      "time": 1771823078337,
+      "tx": "3AF3fhKXTPJPNzVbKks9PPwPAsqv1CeEEKRPTKxZKLUZ3s2Y9PaRGfnvgytvCiEhDtKWb167boeY3MBT1VqrcocQ"
+    },
+    {
+      "type": "buy",
+      "token": "Lobstarism",
+      "mint": "HmV9Y1hr8KrKzJtW44QbgTVSW5XH4cv7gp1VNBzTpump",
+      "amount": 0.02,
+      "score": 10,
+      "meta": "matches \"lobstar\" meta (5 tokens)",
+      "time": 1771823091756,
+      "tx": "3yMPvRC35CiUFS1DDsQdZtBqT8oQqZK2rUXa3XyZ8y6A1BrKsUoMHtjE3Nf9unPVK82Kpybp1vMhbfUMz3vLtodR"
+    },
+    {
+      "type": "sell",
+      "token": "NoLimit",
+      "mint": "4nURS6qxY9bCEhramG2VZfnphJZyzis5EE86w5qLpump",
+      "pnl": -0.0019245519999999995,
+      "pnlPct": -9.622759999999996,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.73213685,
+      "time": 1771823134759,
+      "tx": "3LazxxzuPxyvnFDRMJpMVimEgic1YPEwaTSwQe5V9vLbgit7B6kTCQBbadBuJjdjraGRFV1todBz6swUhrDfXqeV"
+    },
+    {
+      "type": "sell",
+      "token": "Lobstarism",
+      "mint": "HmV9Y1hr8KrKzJtW44QbgTVSW5XH4cv7gp1VNBzTpump",
+      "pnl": 0.051016918999999994,
+      "pnlPct": 255.08459499999998,
+      "reason": "take profit",
+      "result": "win",
+      "balance": 4.803014916,
+      "time": 1771823142497,
+      "tx": "2E4rgVePBwmRWD1vgM5SPQ6gRyffYpxTn7AQjceFZpq5WP8PGU4ES4GhDnUWpUhb8Vvs78FBPaWN2KtTVxGS4E9z"
+    },
+    {
+      "type": "buy",
+      "token": "BLOB",
+      "mint": "5Xw8pE5hwTQycxZZ752yeBdtwWiRmDzxskt9Bgapump",
+      "amount": 0.02,
+      "score": 10,
+      "meta": "matches \"lobstar\" meta (9 tokens)",
+      "time": 1771823152367,
+      "tx": "2RUPFpxExGxLKnnduuXXRPVmU5hQENavggJaHPET6TY179XxXU229buw9jrnceVmNcsGBmGtcuXPZvuh9awftjpc"
     }
   ],
-  "lastTrade": 1771822903368,
+  "lastTrade": 1771823152367,
   "lastPost": null
 }

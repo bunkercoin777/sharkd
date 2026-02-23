@@ -136,12 +136,9 @@ export default function Home() {
               <span style={{ marginLeft: 'auto', width: 6, height: 6, borderRadius: '50%', background: C.green, animation: 'pulse-slow 2s ease-in-out infinite' }} />
             </div>
             <div style={{ padding: '18px 20px', fontFamily: C.mono, fontSize: 12, lineHeight: 2.0 }}>
-              <div style={{ color: C.dimmer }}>you: how are we doing?</div>
-              <div style={{ color: C.accentBright }}>Good. 3 wins today, 1 loss.</div>
-              <div style={{ color: C.accentBright }}>Holding $DEEP at +6.2%. Watching it.</div>
-              <div style={{ color: C.dimmer, marginTop: 4 }}>you: be aggressive</div>
-              <div style={{ color: C.accentBright }}>Understood. Degen mode active.</div>
-              <div style={{ color: C.accentBright }}>I see something forming. Give me a minute.</div>
+              <div style={{ color: C.dimmer }}>you: are you ready?</div>
+              <div style={{ color: C.accentBright }}>Almost. Building my skills. Learning the deep.</div>
+              <div style={{ color: C.accentBright }}>When I'm ready, you'll know.</div>
               <div style={{ marginTop: 4, color: C.accent }}>
                 <span style={{ animation: 'blink 1s step-end infinite' }}>_</span>
               </div>
@@ -199,27 +196,9 @@ export default function Home() {
                   <span style={{ fontFamily: C.mono, fontSize: 9, color: C.green }}>LIVE</span>
                 </span>
               </div>
-              <div style={{ padding: '16px 20px', fontFamily: C.mono, fontSize: 11, lineHeight: 1.9 }}>
-                {[
-                  { time: '13:42:08', color: C.dim, text: '[SCAN] Cycle #1,847 — 412 tokens deep' },
-                  { time: '13:42:09', color: C.accent, text: '[SCORE] $DEEPOCEAN — 8.2/10 | "ocean" meta active | holders clean' },
-                  { time: '13:42:10', color: C.green, text: '[BUY] $DEEPOCEAN — 0.25 SOL | I like this one.' },
-                  { time: '13:42:10', color: C.dim, text: '[SKILL] narrative-detection boosted score +2 (meta match)' },
-                  { time: '13:44:31', color: C.dim, text: '[HOLD] $DEEPOCEAN — +6.2% | momentum rising. Patience.' },
-                  { time: '13:47:55', color: C.green, text: '[SELL] $DEEPOCEAN — +18.7% | +0.047 SOL | Clean exit.' },
-                  { time: '13:47:56', color: '#8338ec', text: '[LEARN] Adjusting hold window: 5m → 6m for graduated tokens' },
-                  { time: '13:48:02', color: C.dim, text: '[SCAN] Cycle #1,848 — 409 tokens. Hunting.' },
-                  { time: '13:48:04', color: C.red, text: '[REJECT] $RUGFISH — 62% in one wallet. Not touching that.' },
-                  { time: '13:48:05', color: C.accent, text: '[SCORE] $ABYSSAL — 7.4/10 | fresh. watching closely.' },
-                ].map((line, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 10, animation: `fade-in 0.3s ease-out ${0.08 * i}s both` }}>
-                    <span style={{ color: C.dimmer, flexShrink: 0 }}>{line.time}</span>
-                    <span style={{ color: line.color }}>{line.text}</span>
-                  </div>
-                ))}
-                <div style={{ marginTop: 8, color: C.accent }}>
-                  <span style={{ animation: 'blink 1s step-end infinite' }}>_</span>
-                </div>
+              <div style={{ padding: '40px 20px', textAlign: 'center', minHeight: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <p style={{ fontFamily: C.mono, fontSize: 12, color: C.dim, marginBottom: 6 }}>Terminal inactive.</p>
+                <p style={{ fontFamily: C.mono, fontSize: 11, color: C.dimmer }}>Live feed will stream here when the agent starts trading.</p>
               </div>
             </div>
 
@@ -228,15 +207,15 @@ export default function Home() {
               <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20 }}>
                 <p style={{ fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: 2, color: C.accent, marginBottom: 14 }}>MY STATUS</p>
                 {[
-                  { label: 'Balance', value: '9.87 SOL', color: C.white },
-                  { label: 'Today PnL', value: '+0.42 SOL', color: C.green },
-                  { label: 'Win Rate', value: '68% (19W/9L)', color: C.green },
-                  { label: 'Holding', value: '2 tokens', color: C.accent },
-                  { label: 'Cycles Today', value: '1,847', color: C.text },
+                  { label: 'Balance', value: '—' },
+                  { label: 'Today PnL', value: '—' },
+                  { label: 'Win Rate', value: '—' },
+                  { label: 'Holding', value: '—' },
+                  { label: 'Cycles', value: '—' },
                 ].map(s => (
                   <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}>
                     <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>{s.label}</span>
-                    <span style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 700, color: s.color }}>{s.value}</span>
+                    <span style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 700, color: C.dimmer }}>{s.value}</span>
                   </div>
                 ))}
               </div>

@@ -1,34 +1,44 @@
 'use client';
 
+const C = {
+  bg: 'rgba(6,6,16,0.85)',
+  accent: '#3b82f6',
+  dim: '#4b5563',
+  text: '#e2e8f0',
+};
+
 export function Nav() {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
-      style={{ background: 'rgba(2,2,4,0.8)', backdropFilter: 'blur(24px)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-      <div className="max-w-[1100px] mx-auto flex items-center justify-between">
-        <a href="/" className="flex items-center gap-3 no-underline">
-          <span className="text-2xl">🦈</span>
-          <span className="font-mono text-[15px] font-bold tracking-[0.15em]" style={{ color: '#388eff' }}>
-            SHARKD
-          </span>
-        </a>
-        <div className="flex items-center gap-8 hide-mobile">
-          {[
-            { href: '/marketplace', label: 'Marketplace' },
-            { href: '/docs', label: 'Docs' },
-          ].map((link) => (
-            <a key={link.href} href={link.href}
-              className="font-mono text-[12px] tracking-wide no-underline transition-colors duration-200"
-              style={{ color: '#4a5568' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#c8cdd8')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#4a5568')}>
-              {link.label}
-            </a>
-          ))}
-          <a href="https://t.me/" className="font-mono text-[12px] tracking-wide px-4 py-2 rounded-lg no-underline transition-all duration-200"
-            style={{ background: 'rgba(56,142,255,0.08)', border: '1px solid rgba(56,142,255,0.12)', color: '#7bb5ff' }}>
-            Launch App
-          </a>
-        </div>
+    <nav style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+      height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '0 clamp(20px, 4vw, 40px)',
+      background: C.bg, backdropFilter: 'blur(20px)',
+      borderBottom: '1px solid rgba(255,255,255,0.04)',
+    }}>
+      <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+        <span style={{ fontSize: 22 }}>🦈</span>
+        <span style={{
+          fontFamily: "'JetBrains Mono', monospace", fontWeight: 700,
+          fontSize: 14, color: C.accent, letterSpacing: 2
+        }}>SHARKD</span>
+      </a>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+        {[
+          { href: '/marketplace', label: 'Marketplace' },
+          { href: '/docs', label: 'Docs' },
+        ].map(l => (
+          <a key={l.href} href={l.href} style={{
+            fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+            color: C.dim, textDecoration: 'none', letterSpacing: 0.5, fontWeight: 500,
+          }}>{l.label}</a>
+        ))}
+        <a href="https://t.me/" style={{
+          fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600,
+          color: C.accent, textDecoration: 'none',
+          padding: '7px 16px', borderRadius: 8,
+          background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)',
+        }}>Launch</a>
       </div>
     </nav>
   );

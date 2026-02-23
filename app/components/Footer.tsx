@@ -1,58 +1,34 @@
+const C = { dim: '#333340', dimmer: '#22222e', accent: '#3b82f6' };
+
 export function Footer() {
   return (
-    <footer style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-      <div className="max-w-[1100px] mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 grid-mobile-1">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-xl">🦈</span>
-              <span className="font-mono text-sm font-bold tracking-wider" style={{ color: '#388eff' }}>SHARKD</span>
-            </div>
-            <p className="text-[13px] leading-relaxed" style={{ color: '#4a5568' }}>
-              Autonomous trading intelligence.<br />Skill-powered. Conversational.
-            </p>
+    <footer style={{ borderTop: '1px solid rgba(255,255,255,0.04)', padding: '60px clamp(20px,4vw,40px) 40px' }}>
+      <div style={{ maxWidth: 1060, margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 40 }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+            <span style={{ fontSize: 18 }}>🦈</span>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 12, color: C.accent, letterSpacing: 1.5 }}>SHARKD</span>
           </div>
-          {[
-            { title: 'Product', links: [
-              { label: 'Deploy Agent', href: 'https://t.me/' },
-              { label: 'Marketplace', href: '/marketplace' },
-              { label: 'Documentation', href: '/docs' },
-            ]},
-            { title: 'Developers', links: [
-              { label: 'SDK Guide', href: '/docs' },
-              { label: 'GitHub', href: 'https://github.com/bunkercoin777/sharkd' },
-              { label: 'Submit a Skill', href: '/marketplace' },
-            ]},
-            { title: 'Community', links: [
-              { label: 'Twitter / X', href: '#' },
-              { label: 'Telegram', href: '#' },
-              { label: 'Discord', href: '#' },
-            ]},
-          ].map((section) => (
-            <div key={section.title}>
-              <p className="font-mono text-[10px] tracking-[0.15em] font-semibold mb-4" style={{ color: '#6b7394' }}>
-                {section.title.toUpperCase()}
-              </p>
-              <div className="flex flex-col gap-3">
-                {section.links.map((link) => (
-                  <a key={link.label} href={link.href}
-                    className="text-[13px] no-underline transition-colors duration-200"
-                    style={{ color: '#4a5568' }}>
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center justify-between pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-          <p className="font-mono text-[11px]" style={{ color: '#2a2a3a' }}>
-            &copy; 2026 SharkD. All rights reserved.
-          </p>
-          <p className="font-mono text-[11px]" style={{ color: '#2a2a3a' }}>
-            Built on Solana
+          <p style={{ fontSize: 12, color: C.dim, lineHeight: 1.7, maxWidth: 220 }}>
+            Autonomous trading intelligence. Skill-powered. Conversational. Built on Solana.
           </p>
         </div>
+        {[
+          { title: 'Product', links: [['Deploy Agent', 'https://t.me/'], ['Marketplace', '/marketplace'], ['Docs', '/docs']] },
+          { title: 'Developers', links: [['SDK Guide', '/docs#sdk'], ['GitHub', 'https://github.com/bunkercoin777/sharkd'], ['Submit Skill', '/marketplace']] },
+          { title: 'Community', links: [['Twitter / X', '#'], ['Telegram', '#'], ['Discord', '#']] },
+        ].map(s => (
+          <div key={s.title}>
+            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: 2, color: C.dim, marginBottom: 14, fontWeight: 600 }}>{s.title.toUpperCase()}</p>
+            {s.links.map(([label, href]) => (
+              <a key={label} href={href} style={{ display: 'block', fontSize: 12, color: C.dim, textDecoration: 'none', marginBottom: 10 }}>{label}</a>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div style={{ maxWidth: 1060, margin: '40px auto 0', paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between' }}>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: C.dimmer }}>&copy; 2026 SharkD</span>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: C.dimmer }}>Solana</span>
       </div>
     </footer>
   );

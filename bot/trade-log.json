@@ -385,8 +385,50 @@
       "meta": "matches \"yara\" meta (6 tokens)",
       "time": 1771823351598,
       "tx": "ujsPXnZuwihQtB82yv1Jd9WKdTnSLK4ZJmTpeDSJ7vJAQ5sjrDpkcSChiqj4GtLHEzTP3fSSNUW6YgrcZp5LdHz"
+    },
+    {
+      "type": "sell",
+      "token": "Yara",
+      "mint": "DUC8tUNw8xv6wLzwXqF2ad9vvZFkWSkVhqRzGzhyEKZL",
+      "pnl": 0.026007555999999998,
+      "pnlPct": 130.03778,
+      "reason": "take profit",
+      "result": "win",
+      "balance": 4.787135198,
+      "time": 1771823388587,
+      "tx": "c3edrA7AutC9gNX3AyKtHyBsGkbjLbX5Z968MFjx1tqeQL255e4RXttMJMckUc6hTcCj6GVbxjKByXJF4MNRzfR"
+    },
+    {
+      "type": "buy",
+      "token": "FSC",
+      "mint": "BPJivqTmLmLDjfSn71gp8XaFYDXxNUuM85pMEWAcpump",
+      "amount": 0.02,
+      "score": 13,
+      "meta": "matches \"cat\" meta (10 tokens)",
+      "time": 1771823400207,
+      "tx": "XwtKAZdoiTj5AezR9yHTX4Pb8x3PqHWpg1oPMtbdVeVyi14Fp1N4SRXbX2AYBAhARhMk2L48n8ZsM1rXpvWuAJQ"
+    },
+    {
+      "type": "buy",
+      "token": "Chungus",
+      "mint": "3XzNoCvGon8xFphusCcuFEZyMPuvzfESrwEBEMHSpump",
+      "amount": 0.02,
+      "score": 9,
+      "meta": "matches \"big\" meta (8 tokens)",
+      "time": 1771823441755,
+      "tx": "4NZncvHABAjZR2JhUdqvBQKCL4BdaQL1owE3m7sfL6QrSTubE6L82cUE2tbQNF32cePqNaqwrqWAnmxoykXz7LQZ"
+    },
+    {
+      "type": "buy",
+      "token": "CJNG",
+      "mint": "b1pEVn3dzPGyqCivgYZWSFxzcqdbKhusr4ND4bQpump",
+      "amount": 0.02,
+      "score": 9,
+      "meta": "matches \"cartel\" meta (10 tokens)",
+      "time": 1771823485199,
+      "tx": "Dz1PeSeuvFaGFRQvY6T6ag66Euz1QFBkwUfYnM1eV8sk7GyVXvTG5mYAWkrssuDXhcadRT8aCB9aJfmKhzF7bXB"
     }
   ],
-  "lastTrade": 1771823351598,
-  "lastPost": null
+  "lastTrade": 1771823485199,
+  "lastPost": 1771823400207
 }

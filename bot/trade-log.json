@@ -213,8 +213,94 @@
       "meta": "matches \"trenches\" meta (5 tokens)",
       "time": 1771821791673,
       "tx": "57m7GiP86CQ8GsGP43VgwCiEgULA3Gtzv4RGaoXkd4jdoAZsAYAmwvy3V1irFFPbtiuxdDgor9WmmpgXmn2xU5JL"
+    },
+    {
+      "type": "buy",
+      "token": "Yara",
+      "mint": "8C8sgpB7rJQT4z6XWJJ66vAwspxcxNHmAQgfsc4Kpump",
+      "amount": 0.02,
+      "score": 10,
+      "meta": "matches \"yara\" meta (6 tokens)",
+      "time": 1771822242144,
+      "tx": "5h3QNGQf7HW3aTN9r2RKuAgkhFf1tT4ZDiqcVZU8f4W1cVWKxUSzMk17Exo5JKGBg6534BMb3AQrMf86fAM63aJm"
+    },
+    {
+      "type": "buy",
+      "token": "ISRAEL",
+      "mint": "Hzyr7ehMTbqMviCwfFE2ZnySXUGyQvs5voAm7u7ypump",
+      "amount": 0.02,
+      "score": 13,
+      "meta": "matches \"memes\" meta (6 tokens)",
+      "time": 1771822385775,
+      "tx": "5azZJV78M333TouLc7uA6yD1vjaRmrDBH69Q4E9ATGKMbdNKQsmjapc3KC9NR5U5MzcZPPgTx2JwYJV93mC5JBDV"
+    },
+    {
+      "type": "sell",
+      "token": "ISRAEL",
+      "mint": "Hzyr7ehMTbqMviCwfFE2ZnySXUGyQvs5voAm7u7ypump",
+      "pnl": 0.003534596000000001,
+      "pnlPct": 17.672980000000006,
+      "reason": "take profit",
+      "result": "win",
+      "balance": 4.751719513,
+      "time": 1771822422860,
+      "tx": "2BkKwuBNVNRsHEwtz89DJmFH7ZxBEAbNruwBih3nuMTrgDXrHt4KwKCgSgdA4MUVdgCS9UAgjjEeD88aCzPcLsZN"
+    },
+    {
+      "type": "buy",
+      "token": "Lobqueen",
+      "mint": "E6e67NUDisbnWMbmuALDi6qRANbUiNHkpDnqhRW1pump",
+      "amount": 0.02,
+      "score": 12,
+      "meta": "matches \"wilde\" meta (6 tokens)",
+      "time": 1771822439792,
+      "tx": "5nEGGWjSwdq1Bib7FZk4wKqbTntEVgTWqw7St7T4RhJAoYn8oUtwWJkDvXMGyyPBHGCodHQVPStReCyVdGEmbt9P"
+    },
+    {
+      "type": "sell",
+      "token": "Yara",
+      "mint": "8C8sgpB7rJQT4z6XWJJ66vAwspxcxNHmAQgfsc4Kpump",
+      "pnl": -0.0014877350000000004,
+      "pnlPct": -7.438675000000002,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.749931109,
+      "time": 1771822480890,
+      "tx": "3DuCtKeD9R42qLQq3M3F8iywWjAo2fKRJJ6bhDVr2SJ4fHV9TMYv56A9tqH3pm2LKKLk94v9L9aeRRysK1C47Bf2"
+    },
+    {
+      "type": "buy",
+      "token": "Yara",
+      "mint": "8C8sgpB7rJQT4z6XWJJ66vAwspxcxNHmAQgfsc4Kpump",
+      "amount": 0.02,
+      "score": 10,
+      "meta": "matches \"yara\" meta (6 tokens)",
+      "time": 1771822794840,
+      "tx": "5LSVedh8i6q1Zv5azSVoakc48kEeQp4Epg4coKHAn79CqrfxtSSY61hvxPcgqP3TfiBCsuTyLmBrSfjYRzEikGnC"
+    },
+    {
+      "type": "sell",
+      "token": "Yara",
+      "mint": "8C8sgpB7rJQT4z6XWJJ66vAwspxcxNHmAQgfsc4Kpump",
+      "pnl": -0.0035110700000000016,
+      "pnlPct": -17.555350000000008,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.744643305,
+      "time": 1771822829046,
+      "tx": "61Zjp8AGhki8munuvdndM6B6Vbc6Auo2GBWmbyCQfpUHCeD5CFQ8GX6JgvMGddxG1WvgUKxggG5mXRmEppv75Bhs"
+    },
+    {
+      "type": "buy",
+      "token": "ROSClaw",
+      "mint": "23daKhFcKK24AHBojh89wRmVb9Lmh6BuMSeKjmrqTQUX",
+      "amount": 0.02,
+      "score": 8,
+      "meta": null,
+      "time": 1771822903368,
+      "tx": "5AoJqPejsZQJWku8XaA76vJWR3zYhEb468rfzrwy6MPdgiccZTTvqUJVTfTNXA2GQD4oWPYCsGG7ThtPR7y2QHf6"
     }
   ],
-  "lastTrade": 1771821791673,
+  "lastTrade": 1771822903368,
   "lastPost": null
 }

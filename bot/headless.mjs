@@ -67,6 +67,191 @@ const rugCreators = new Set();  // track rug creators
 let wins = 0, losses = 0, totalPnl = 0, cycle = 0;
 
 // ══════════════════════════════════════════════════════════════
+// LEARNING ENGINE — adapts from every trade
+// ══════════════════════════════════════════════════════════════
+
+const learnings = {
+  // Per-trade outcome tracking
+  trades: [],           // { symbol, score, meta, holdMin, pnlPct, reason, result, isBonding, mcap, replies, ageHours, top1Pct, top5Pct, holderCount }
+
+  // Discovered rules (adjustable thresholds)
+  rules: {
+    minMcap: 1000,            // updated from loss patterns
+    maxTop1Pct: 50,           // tightened when whales dump on us
+    maxTop5Pct: 70,           // tightened when concentrated holders dump
+    minHolders: 0,            // learned minimum holder count
+    minAge: 0,                // avoid tokens too young (minutes)
+    maxAge: 360,              // avoid tokens too old (minutes)
+    metaBoostMultiplier: 1.0, // adjusted based on meta trade performance
+    freshGradBonus: 0,        // extra score for freshly graduated
+    minReplies: 5,            // raised if low-reply tokens keep losing
+  },
+
+  // Pattern tracking
+  lossByReason: {},     // reason → count
+  winsByMeta: 0, lossesByMeta: 0,
+  winsByNoMeta: 0, lossesByNoMeta: 0,
+  winsByBonding: 0, lossesByBonding: 0,
+  winsByGrad: 0, lossesByGrad: 0,
+  avgWinHoldMin: 0, avgLossHoldMin: 0,
+  avgWinScore: 0, avgLossScore: 0,
+
+  // Rug/scam pattern tracking
+  rugPatterns: [],      // { creator, symbol, top1Pct, mcap, holdMin, loss }
+};
+
+function recordTradeLearning(data) {
+  learnings.trades.push(data);
+
+  const isWin = data.result === 'win';
+
+  // Meta tracking
+  if (data.meta) {
+    if (isWin) learnings.winsByMeta++; else learnings.lossesByMeta++;
+  } else {
+    if (isWin) learnings.winsByNoMeta++; else learnings.lossesByNoMeta++;
+  }
+
+  // Bonding vs graduated
+  if (data.isBonding) {
+    if (isWin) learnings.winsByBonding++; else learnings.lossesByBonding++;
+  } else {
+    if (isWin) learnings.winsByGrad++; else learnings.lossesByGrad++;
+  }
+
+  // Loss reason tracking
+  if (!isWin && data.reason) {
+    learnings.lossByReason[data.reason] = (learnings.lossByReason[data.reason] || 0) + 1;
+  }
+
+  // Running averages
+  const winTrades = learnings.trades.filter(t => t.result === 'win');
+  const lossTrades = learnings.trades.filter(t => t.result === 'loss');
+  if (winTrades.length) {
+    learnings.avgWinHoldMin = winTrades.reduce((s, t) => s + t.holdMin, 0) / winTrades.length;
+    learnings.avgWinScore = winTrades.reduce((s, t) => s + (t.score || 0), 0) / winTrades.length;
+  }
+  if (lossTrades.length) {
+    learnings.avgLossHoldMin = lossTrades.reduce((s, t) => s + t.holdMin, 0) / lossTrades.length;
+    learnings.avgLossScore = lossTrades.reduce((s, t) => s + (t.score || 0), 0) / lossTrades.length;
+  }
+}
+
+function analyzeAndAdapt() {
+  const total = wins + losses;
+  if (total < 3) return;
+  const wr = ((wins / total) * 100).toFixed(0);
+
+  log('LEARN', `=== ANALYSIS: ${total} trades, ${wr}% win rate, PnL: ${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(4)} SOL ===`, 'learn');
+
+  const skillsDiscovered = [];
+
+  // 1. Meta effectiveness
+  const metaTotal = learnings.winsByMeta + learnings.lossesByMeta;
+  const noMetaTotal = learnings.winsByNoMeta + learnings.lossesByNoMeta;
+  if (metaTotal >= 2 && noMetaTotal >= 2) {
+    const metaWR = metaTotal > 0 ? (learnings.winsByMeta / metaTotal * 100).toFixed(0) : 0;
+    const noMetaWR = noMetaTotal > 0 ? (learnings.winsByNoMeta / noMetaTotal * 100).toFixed(0) : 0;
+    log('LEARN', `Narrative trades: ${metaWR}% WR (${metaTotal}) vs non-narrative: ${noMetaWR}% WR (${noMetaTotal})`, 'learn');
+
+    if (Number(metaWR) > Number(noMetaWR) + 10) {
+      learnings.rules.metaBoostMultiplier = 1.5;
+      skillsDiscovered.push({ name: 'Narrative Boost', description: `Meta trades win at ${metaWR}% vs ${noMetaWR}%. Increasing narrative score weight by 1.5x.`, data: { metaWR, noMetaWR, multiplier: 1.5 } });
+    } else if (Number(noMetaWR) > Number(metaWR) + 15) {
+      learnings.rules.metaBoostMultiplier = 0.5;
+      skillsDiscovered.push({ name: 'Narrative Skeptic', description: `Meta trades underperforming at ${metaWR}% vs ${noMetaWR}%. Reducing narrative weight.`, data: { metaWR, noMetaWR, multiplier: 0.5 } });
+    }
+  }
+
+  // 2. Bonding vs Graduated
+  const bondTotal = learnings.winsByBonding + learnings.lossesByBonding;
+  const gradTotal = learnings.winsByGrad + learnings.lossesByGrad;
+  if (bondTotal >= 2 && gradTotal >= 2) {
+    const bondWR = bondTotal > 0 ? (learnings.winsByBonding / bondTotal * 100).toFixed(0) : 0;
+    const gradWR = gradTotal > 0 ? (learnings.winsByGrad / gradTotal * 100).toFixed(0) : 0;
+    log('LEARN', `Graduated: ${gradWR}% WR (${gradTotal}) | Bonding: ${bondWR}% WR (${bondTotal})`, 'learn');
+  }
+
+  // 3. Holder concentration patterns
+  const lossesFromWhales = learnings.trades.filter(t => t.result === 'loss' && t.top1Pct > 30);
+  if (lossesFromWhales.length >= 2) {
+    const avgTop1 = lossesFromWhales.reduce((s, t) => s + t.top1Pct, 0) / lossesFromWhales.length;
+    if (avgTop1 > 25 && learnings.rules.maxTop1Pct > 30) {
+      learnings.rules.maxTop1Pct = 30;
+      log('LEARN', `RULE UPDATE: Tightening max top1 holder to 30% — lost ${lossesFromWhales.length} trades to whale dumps (avg ${avgTop1.toFixed(0)}%)`, 'learn');
+      skillsDiscovered.push({ name: 'Whale Shield', description: `Tightened top holder limit to 30% after ${lossesFromWhales.length} whale-caused losses. Avg losing top1: ${avgTop1.toFixed(0)}%.`, data: { maxTop1Pct: 30, lossCount: lossesFromWhales.length, avgTop1 } });
+    }
+  }
+
+  const lossesFromConcentrated = learnings.trades.filter(t => t.result === 'loss' && t.top5Pct > 55);
+  if (lossesFromConcentrated.length >= 2 && learnings.rules.maxTop5Pct > 60) {
+    learnings.rules.maxTop5Pct = 60;
+    log('LEARN', `RULE UPDATE: Tightening max top5 holders to 60% — concentrated tokens keep dumping`, 'learn');
+    skillsDiscovered.push({ name: 'Distribution Filter', description: `Tightened top5 holder limit to 60% after repeated concentrated dumps.`, data: { maxTop5Pct: 60, lossCount: lossesFromConcentrated.length } });
+  }
+
+  // 4. Low holder count losses
+  const lossesLowHolders = learnings.trades.filter(t => t.result === 'loss' && t.holderCount < 10);
+  if (lossesLowHolders.length >= 2 && learnings.rules.minHolders < 10) {
+    learnings.rules.minHolders = 10;
+    log('LEARN', `RULE UPDATE: Minimum 10 holders required — lost ${lossesLowHolders.length} trades on thin holder base`, 'learn');
+    skillsDiscovered.push({ name: 'Thin Market Shield', description: `Requiring minimum 10 holders after ${lossesLowHolders.length} losses on low-holder tokens.`, data: { minHolders: 10, lossCount: lossesLowHolders.length } });
+  }
+
+  // 5. Score threshold — if low-score trades keep losing
+  const lowScoreLosses = learnings.trades.filter(t => t.result === 'loss' && t.score <= 6);
+  const lowScoreWins = learnings.trades.filter(t => t.result === 'win' && t.score <= 6);
+  if (lowScoreLosses.length >= 3 && lowScoreWins.length < lowScoreLosses.length * 0.3) {
+    log('LEARN', `INSIGHT: Low-score trades (<=6) losing at high rate: ${lowScoreLosses.length}L vs ${lowScoreWins.length}W. Prefer higher scores.`, 'learn');
+    skillsDiscovered.push({ name: 'Quality Filter', description: `Low-score tokens (<=6) losing heavily: ${lowScoreLosses.length}L vs ${lowScoreWins.length}W. Prioritizing higher conviction trades.`, data: { lowScoreLosses: lowScoreLosses.length, lowScoreWins: lowScoreWins.length } });
+  }
+
+  // 6. Hold time analysis
+  if (learnings.avgWinHoldMin > 0 && learnings.avgLossHoldMin > 0) {
+    log('LEARN', `Avg hold: WINS ${learnings.avgWinHoldMin.toFixed(1)}min | LOSSES ${learnings.avgLossHoldMin.toFixed(1)}min | Win score: ${learnings.avgWinScore.toFixed(1)} Loss score: ${learnings.avgLossScore.toFixed(1)}`, 'learn');
+  }
+
+  // 7. Rug creator analysis
+  if (learnings.rugPatterns.length >= 2) {
+    log('LEARN', `BLACKLISTED ${rugCreators.size} creator wallets from ${learnings.rugPatterns.length} rug patterns`, 'learn');
+    skillsDiscovered.push({ name: 'Rug Creator Blacklist', description: `Tracking ${rugCreators.size} wallets that created tokens resulting in losses. Auto-reject any new token from these creators.`, data: { count: rugCreators.size, patterns: learnings.rugPatterns.slice(-5) } });
+  }
+
+  // 8. Stale cut effectiveness
+  const staleCuts = learnings.trades.filter(t => t.reason?.includes('stale'));
+  if (staleCuts.length >= 3) {
+    const avgStalePnl = staleCuts.reduce((s, t) => s + t.pnlPct, 0) / staleCuts.length;
+    log('LEARN', `Stale cuts avg PnL: ${avgStalePnl.toFixed(1)}%. ${avgStalePnl > -3 ? 'Working well — cutting before deep losses.' : 'May need tighter stale timers.'}`, 'learn');
+  }
+
+  // 9. Loss reason breakdown
+  const reasons = Object.entries(learnings.lossByReason).sort((a, b) => b[1] - a[1]);
+  if (reasons.length > 0) {
+    log('LEARN', `Loss reasons: ${reasons.map(([r, c]) => `${r}: ${c}`).join(' | ')}`, 'learn');
+  }
+
+  // Save all discovered skills to DB
+  for (const skill of skillsDiscovered) {
+    log('SKILL', `NEW: ${skill.name} — ${skill.description}`, 'skill');
+    saveSkillLog(skill);
+  }
+
+  // Update state with learnings
+  updateState('learnings', {
+    rules: learnings.rules,
+    totalTrades: total, winRate: wr,
+    rugCreators: rugCreators.size,
+    avgWinHoldMin: learnings.avgWinHoldMin,
+    avgLossHoldMin: learnings.avgLossHoldMin,
+    avgWinScore: learnings.avgWinScore,
+    avgLossScore: learnings.avgLossScore,
+    lossByReason: learnings.lossByReason,
+    metaStats: { winsByMeta: learnings.winsByMeta, lossesByMeta: learnings.lossesByMeta, winsByNoMeta: learnings.winsByNoMeta, lossesByNoMeta: learnings.lossesByNoMeta },
+    lastAnalysis: Date.now(),
+  }).catch(() => {});
+}
+
+// ══════════════════════════════════════════════════════════════
 // LOGGING
 // ══════════════════════════════════════════════════════════════
 
@@ -164,8 +349,9 @@ function getMetaBoost(token, narratives) {
   const text = `${token.name || ''} ${token.symbol || ''}`.toLowerCase();
   for (const n of narratives) {
     if (text.includes(n.keyword)) {
-      const boost = n.count >= 8 ? 4 : n.count >= 5 ? 3 : n.count >= 4 ? 2 : 1;
-      return { boost, reason: `matches "${n.keyword}" meta (${n.count} tokens)` };
+      const rawBoost = n.count >= 8 ? 4 : n.count >= 5 ? 3 : n.count >= 4 ? 2 : 1;
+      const boost = Math.round(rawBoost * learnings.rules.metaBoostMultiplier);
+      return { boost, reason: `matches "${n.keyword}" meta (${n.count} tokens)${learnings.rules.metaBoostMultiplier !== 1.0 ? ` [${learnings.rules.metaBoostMultiplier}x]` : ''}` };
     }
   }
   return { boost: 0, reason: null };
@@ -271,7 +457,7 @@ async function analyzeHolders(mint, symbol) {
     else if (meaningfulHolders >= 8) { score += 1; }
     else { score -= 1; risks.push(`only ${meaningfulHolders} holders`); }
 
-    const safe = top1Pct < 50 && top5Pct < 70;
+    const safe = top1Pct < learnings.rules.maxTop1Pct && top5Pct < learnings.rules.maxTop5Pct && meaningfulHolders >= learnings.rules.minHolders;
     log('HOLDER', `$${symbol}: ${meaningfulHolders} holders | top1: ${top1Pct.toFixed(1)}% | top5: ${top5Pct.toFixed(1)}% | ${safe ? 'OK' : 'RISKY'}`);
     return { score, reasons, risks, safe, top1Pct, top5Pct, holderCount: meaningfulHolders };
   } catch {
@@ -422,6 +608,9 @@ async function executeBuy(token) {
       symbol, name: token.name || symbol, buySol: amount, buyTime: Date.now(),
       tokens: base.toString(), uiTokens: ui, isBonding, priceHistory: [],
       creator: token.creator || null, meta: token._score?.meta || null,
+      _score: token._score?.score || 0, _mcap: token.usd_market_cap || 0,
+      _replies: token.reply_count || 0, _ageHours: token._score?.ageHours || 0,
+      _holderData: token._holderData || null,
     });
 
     const trade = { type: 'buy', token: symbol, mint, amount, score: token._score?.score, meta: token._score?.meta, time: Date.now(), tx: sig };
@@ -488,26 +677,46 @@ async function executeSell(mint, reason) {
   if (pnlSol >= 0) wins++; else losses++;
   totalPnl += pnlSol;
 
-  // Track rug creators
-  if (pnlSol < -0.01 && pos.creator) rugCreators.add(pos.creator);
+  // Track rug creators + rug patterns
+  if (pnlSol < -0.005 && pos.creator) {
+    rugCreators.add(pos.creator);
+    learnings.rugPatterns.push({
+      creator: pos.creator, symbol: pos.symbol, top1Pct: pos._holderData?.top1Pct || 0,
+      mcap: pos._mcap || 0, holdMin: (Date.now() - pos.buyTime) / 60000, loss: pnlSol,
+    });
+    log('BLACKLIST', `Creator ${pos.creator.slice(0, 12)}... blacklisted after $${pos.symbol} loss. Total blacklisted: ${rugCreators.size}`, 'learn');
+  }
 
   positions.delete(mint);
   exitedMints.add(mint);
 
   const bal = await getBalance();
+  const result = pnlSol >= 0 ? 'win' : 'loss';
   const emoji = pnlSol >= 0 ? 'WIN' : 'LOSS';
   log(emoji, `$${pos.symbol} | ${reason} | ${pnlSol >= 0 ? '+' : ''}${pnlSol.toFixed(4)} SOL (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(1)}%) | Balance: ${bal.toFixed(3)} SOL | ${wins}W/${losses}L`);
 
-  const trade = { type: 'sell', token: pos.symbol, mint, pnl: pnlSol, pnlPct, reason, result: pnlSol >= 0 ? 'win' : 'loss', balance: bal, time: Date.now(), tx: sig };
+  const trade = { type: 'sell', token: pos.symbol, mint, pnl: pnlSol, pnlPct, reason, result, balance: bal, time: Date.now(), tx: sig };
   saveTradeLog(trade);
 
-  // Skill learning
+  // Feed the learning engine
   const holdMin = (Date.now() - pos.buyTime) / 60000;
-  const learning = { token: pos.symbol, pnl: pnlSol, pnlPct, holdMin, reason, meta: pos.meta, score: pos._score };
-  state_learnings.push(learning);
-}
+  recordTradeLearning({
+    symbol: pos.symbol, score: pos._score || 0, meta: pos.meta, holdMin, pnlPct, reason, result,
+    isBonding: pos.isBonding, mcap: pos._mcap || 0, replies: pos._replies || 0,
+    ageHours: pos._ageHours || 0, top1Pct: pos._holderData?.top1Pct || 0,
+    top5Pct: pos._holderData?.top5Pct || 0, holderCount: pos._holderData?.holderCount || 0,
+  });
 
-const state_learnings = [];
+  // Log detailed loss analysis
+  if (result === 'loss') {
+    const analysis = [];
+    if (pos._holderData?.top1Pct > 25) analysis.push(`whale: top1 ${pos._holderData.top1Pct.toFixed(0)}%`);
+    if (holdMin < 2) analysis.push(`died in ${holdMin.toFixed(1)}min`);
+    if (pos.meta) analysis.push(`meta: ${pos.meta}`);
+    analysis.push(`score was ${pos._score || '?'}`);
+    log('AUTOPSY', `$${pos.symbol}: ${analysis.join(' | ')} — ${reason}`, 'learn');
+  }
+}
 
 // ══════════════════════════════════════════════════════════════
 // POSITION MONITORING — momentum tracking + dynamic exits
@@ -617,7 +826,8 @@ async function scanAndTrade() {
       continue;
     }
 
-    // Adjust score with holder data
+    // Attach holder data to token for learning engine
+    token._holderData = holders;
     token._score.score += holders.score;
     if (token._score.score < MIN_SCORE) continue;
 
@@ -628,37 +838,7 @@ async function scanAndTrade() {
   }
 }
 
-// ══════════════════════════════════════════════════════════════
-// SKILL LEARNING — periodic analysis of trade patterns
-// ══════════════════════════════════════════════════════════════
-
-function analyzeAndLearn() {
-  const total = wins + losses;
-  if (total < 5) return;
-  const wr = ((wins / total) * 100).toFixed(0);
-
-  log('LEARN', `Analyzing ${total} trades — ${wr}% win rate`);
-
-  // Meta trades vs non-meta
-  const metaTrades = state_learnings.filter(l => l.meta);
-  const noMeta = state_learnings.filter(l => !l.meta);
-  if (metaTrades.length >= 3) {
-    const metaWR = metaTrades.filter(l => l.pnl > 0).length / metaTrades.length;
-    const noMetaWR = noMeta.length ? noMeta.filter(l => l.pnl > 0).length / noMeta.length : 0;
-    if (metaWR > noMetaWR + 0.1) {
-      log('SKILL', `Narrative detection: meta WR ${(metaWR * 100).toFixed(0)}% vs ${(noMetaWR * 100).toFixed(0)}%`);
-      saveSkillLog({ name: 'Narrative Detection', metaWR: (metaWR * 100).toFixed(0), noMetaWR: (noMetaWR * 100).toFixed(0), trades: total });
-    }
-  }
-
-  // Rug-free check
-  const bigLosses = state_learnings.filter(l => l.pnlPct < -15);
-  if (total >= 10 && bigLosses.length === 0) {
-    log('SKILL', `Holder analysis keeping us rug-free across ${total} trades`);
-  }
-
-  log('LEARN', `Total PnL: ${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(4)} SOL`);
-}
+// The old analyzeAndLearn is replaced by analyzeAndAdapt() in the learning engine above.
 
 // ══════════════════════════════════════════════════════════════
 // MAIN LOOP
@@ -713,8 +893,9 @@ async function main() {
       await checkPositions();
       await scanAndTrade();
 
-      // Learn every 10 trades
-      if ((wins + losses) > 0 && (wins + losses) % 10 === 0) analyzeAndLearn();
+      // Analyze and adapt every 3 trades (learn fast)
+      const totalTrades = wins + losses;
+      if (totalTrades > 0 && totalTrades % 3 === 0 && learnings.trades.length >= 3) analyzeAndAdapt();
 
       // Sync state to DB for live terminal
       const bal = await getBalance();

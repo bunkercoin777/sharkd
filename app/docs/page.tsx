@@ -2,10 +2,10 @@ import { Nav } from '../components/Nav';
 import { Footer } from '../components/Footer';
 
 const C = {
-  bg: '#060610', surface: '#0b0b18', border: 'rgba(255,255,255,0.05)',
-  accent: '#3b82f6', green: '#22c55e', red: '#ef4444', amber: '#f59e0b',
-  purple: '#a855f7', cyan: '#06b6d4', white: '#f0f2f8', text: '#94a3b8',
-  dim: '#475569', dimmer: '#334155',
+  bg: '#020810', surface: '#041220', border: 'rgba(0,180,216,0.06)', borderLit: 'rgba(0,180,216,0.12)',
+  accent: '#00b4d8', green: '#06d6a0', red: '#ef476f', amber: '#ffd166',
+  purple: '#8338ec',
+  white: '#e0eaf4', text: '#7b93b0', dim: '#3d5a80', dimmer: '#1e3354',
   mono: "'JetBrains Mono', 'SF Mono', monospace",
   sans: "'Inter', system-ui, sans-serif",
 };
@@ -54,14 +54,14 @@ const sections = [
         { mode: 'Balanced', sizing: '0.10-0.50 SOL', tp: '+15%', sl: '-8%', score: '5+' },
         { mode: 'Degen', sizing: '0.10-1.00 SOL', tp: '+20%', sl: '-12%', score: '4+' },
       ]},
-      { type: 'text', content: 'Position sizing scales within these ranges based on your agent\'s win rate. More wins → bigger positions, automatically.' },
+      { type: 'text', content: 'Position sizing scales within these ranges based on your agent\'s win rate. More wins = bigger positions, automatically.' },
     ]
   },
   {
     id: 'skills',
     title: 'Skills System',
     blocks: [
-      { type: 'text', content: 'Skills are modular trading strategies that plug into your agent\'s decision loop. Each skill hooks into specific points in the trading lifecycle.' },
+      { type: 'text', content: 'Skills are modular trading strategies that plug into your agent\'s decision loop. Each skill hooks into specific points in the trading lifecycle. All skills must pass testing on the reference agent before marketplace listing.' },
       { type: 'code', title: 'Skill lifecycle hooks', content: `pre-buy    → Filter or modify buy decisions before execution
 post-scan  → Process scan results, boost or penalize scores
 on-cycle   → Run logic every scan cycle (monitoring, tracking)
@@ -102,7 +102,24 @@ pre-sell   → Adjust sell logic, override stop loss / take profit` },
     scoreModifier: metaBoost 
   };
 }` },
-      { type: 'text', content: 'Test your skill against historical trade data, then mint it on the marketplace. You earn 10% of every profitable trade your skill contributes to.' },
+      { type: 'text', content: 'Test your skill on the reference agent first. Once it proves profitable over at least 20 trades, it can be minted on the marketplace. You earn 10% of every profitable trade your skill contributes to.' },
+    ]
+  },
+  {
+    id: 'testing',
+    title: 'Skill Testing Pipeline',
+    blocks: [
+      { type: 'text', content: 'Every skill goes through a rigorous testing pipeline before it can be listed on the marketplace. No exceptions.' },
+      { type: 'code', title: 'Testing requirements', content: `1. Submit skill to reference agent
+2. Minimum 20 live trades on mainnet
+3. Positive PnL over testing period
+4. No critical failures (missed sells, etc)
+5. Skill self-update cycle verified
+6. Performance metrics published on-chain
+
+Testing period: 48-168 hours depending on market activity
+Results: publicly visible on the Live Terminal` },
+      { type: 'text', content: 'The reference agent runs all marketplace skills simultaneously. The Live Terminal page shows every decision in real-time — which skills triggered, what they scored, and the outcome.' },
     ]
   },
   {
@@ -110,9 +127,9 @@ pre-sell   → Adjust sell logic, override stop loss / take profit` },
     title: 'Dev Locks',
     blocks: [
       { type: 'text', content: 'Smart contracts that cryptographically lock developer token allocations for a verified period. Visible and verifiable by anyone on-chain.' },
-      { type: 'code', title: 'Lock options', content: `[LOCK]   7 days   — Basic trust signal
-[LOCK]   30 days  — Strong commitment  
-[LOCK]   90 days  — Maximum trust
+      { type: 'code', title: 'Lock options', content: `  7 days   — Basic trust signal
+  30 days  — Strong commitment  
+  90 days  — Maximum trust
 
 Vesting: Linear unlock over the period
          (1% per day over 100 days)
@@ -152,7 +169,7 @@ export default function Docs() {
             <div style={{ position: 'sticky', top: 100, display: 'flex', flexDirection: 'column', gap: 2 }}>
               <p style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: 3, color: C.accent, marginBottom: 14 }}>DOCUMENTATION</p>
               {sections.map(s => (
-                <a key={s.id} href={`#${s.id}`} style={{ fontFamily: C.mono, fontSize: 12, padding: '6px 0', textDecoration: 'none', color: C.dim, transition: 'color 0.2s' }}>
+                <a key={s.id} href={`#${s.id}`} style={{ fontFamily: C.mono, fontSize: 12, padding: '6px 0', textDecoration: 'none', color: C.dim }}>
                   {s.title}
                 </a>
               ))}
@@ -178,10 +195,10 @@ export default function Docs() {
                       const b = block as { type: string; title: string; content: string };
                       return (
                         <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}` }}>
-                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
-                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
-                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 16px', background: 'rgba(0,180,216,0.02)', borderBottom: `1px solid ${C.border}` }}>
+                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ef476f' }} />
+                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ffd166' }} />
+                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#06d6a0' }} />
                             <span style={{ fontFamily: C.mono, fontSize: 11, marginLeft: 8, color: C.dimmer }}>{b.title}</span>
                           </div>
                           <div style={{ padding: '16px 20px' }}>
@@ -198,7 +215,7 @@ export default function Docs() {
                             <div key={s.step} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20, display: 'flex', gap: 16 }}>
                               <div style={{
                                 width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                                background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.12)',
+                                background: 'rgba(0,180,216,0.08)', border: '1px solid rgba(0,180,216,0.12)',
                                 fontFamily: C.mono, fontSize: 13, fontWeight: 700, color: C.accent,
                               }}>{s.step}</div>
                               <div>
@@ -213,10 +230,10 @@ export default function Docs() {
                     if (block.type === 'commands') {
                       const cmds = block.content as Array<{ cmd: string; desc: string }>;
                       return (
-                        <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                        <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                           {cmds.map(c => (
                             <div key={c.cmd} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '10px 0', borderBottom: `1px solid ${C.border}` }}>
-                              <code style={{ fontFamily: C.mono, fontSize: 12, color: '#7bb5ff', flexShrink: 0, minWidth: 240 }}>{c.cmd}</code>
+                              <code style={{ fontFamily: C.mono, fontSize: 12, color: '#48cae4', flexShrink: 0, minWidth: 240 }}>{c.cmd}</code>
                               <span style={{ fontSize: 13, color: C.dim, lineHeight: 1.5 }}>{c.desc}</span>
                             </div>
                           ))}
@@ -228,11 +245,9 @@ export default function Docs() {
                       return (
                         <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
                           <div style={{ padding: '16px 20px' }}>
-                            {/* Header */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 16, fontFamily: C.mono, fontSize: 11, color: C.dimmer, paddingBottom: 12, marginBottom: 12, borderBottom: `1px solid ${C.border}` }}>
                               <span>MODE</span><span>SIZING</span><span>TP</span><span>SL</span><span>MIN SCORE</span>
                             </div>
-                            {/* Rows */}
                             {rows.map(r => (
                               <div key={r.mode} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 16, fontFamily: C.mono, fontSize: 12, color: C.text, padding: '8px 0' }}>
                                 <span style={{ color: C.white, fontWeight: 600 }}>{r.mode}</span>

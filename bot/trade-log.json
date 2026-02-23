@@ -7,8 +7,62 @@
       "score": 8,
       "meta": "cleveculer",
       "time": 1771820283102
+    },
+    {
+      "type": "buy",
+      "token": "Lobqueen",
+      "mint": "E6e67NUDisbnWMbmuALDi6qRANbUiNHkpDnqhRW1pump",
+      "amount": 0.05,
+      "score": 14,
+      "meta": "matches \"wilde\" meta (6 tokens)",
+      "time": 1771820969212,
+      "tx": "2QtYjfMp44vTa52K9MsP6Q5uJi8yqAKQRbvAYEjpoA6Z2MzsCE4iek2qUtdJ3W1rakiEL6GvvVAzvhP8k9J4d2TB"
+    },
+    {
+      "type": "sell",
+      "token": "Lobqueen",
+      "mint": "E6e67NUDisbnWMbmuALDi6qRANbUiNHkpDnqhRW1pump",
+      "pnl": -0.0073097880000000046,
+      "pnlPct": -14.61957600000001,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.934275777,
+      "time": 1771821002507,
+      "tx": "jnBPumEL8ZhRHGPwapcuMfr2cmkUq5xx8rDJeP1M7vR4SZYp9fkG5TFVtyo8YErBq3ouRebhEBWQUjGpTd4riNg"
+    },
+    {
+      "type": "buy",
+      "token": "Yara",
+      "mint": "DUC8tUNw8xv6wLzwXqF2ad9vvZFkWSkVhqRzGzhyEKZL",
+      "amount": 0.05,
+      "score": 13,
+      "meta": "matches \"yara\" meta (6 tokens)",
+      "time": 1771821012753,
+      "tx": "5yfxgyQASzMRSzcsMsrVdXDYnd3FaFoZvyXooxnMx2E6E88wxDnuzTFwVZ5oF63w1PJ1fHsv7Neg4C8tEiXMyZqg"
+    },
+    {
+      "type": "sell",
+      "token": "Yara",
+      "mint": "DUC8tUNw8xv6wLzwXqF2ad9vvZFkWSkVhqRzGzhyEKZL",
+      "pnl": -0.010261719000000002,
+      "pnlPct": -20.523438000000006,
+      "reason": "stop loss",
+      "result": "loss",
+      "balance": 4.9250637,
+      "time": 1771821050511,
+      "tx": "66K9UeVXY7981RizivXvjruzpmfuW6ajd3iXQfqByuA3uDkWAAhU4YhPW4z5jGqWhi4HZ1eZDxcKzVKVR8V5Jw6j"
+    },
+    {
+      "type": "buy",
+      "token": "Yara",
+      "mint": "8C8sgpB7rJQT4z6XWJJ66vAwspxcxNHmAQgfsc4Kpump",
+      "amount": 0.05,
+      "score": 14,
+      "meta": "matches \"yara\" meta (6 tokens)",
+      "time": 1771821062008,
+      "tx": "2nKMZ64FF2JvgKoEcWaXzxSg2wWFYazHywS82qbFTjtxCfkqjUuHE2zxaMyUgvZuvtrEkyFNY96VYwTRRy5H6maR"
     }
   ],
-  "lastTrade": 1771820283102,
+  "lastTrade": 1771821062008,
   "lastPost": null
 }

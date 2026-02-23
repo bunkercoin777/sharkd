@@ -139,6 +139,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ═══ $SHARKD TOKEN ═══ */}
+      <div style={divider} />
+      <section style={{ padding: '60px 0', background: 'linear-gradient(180deg, rgba(0,180,216,0.02) 0%, transparent 100%)' }}>
+        <div style={wrap}>
+          <div style={{ background: C.surface, border: `1px solid ${C.borderLit}`, borderRadius: 16, padding: 'clamp(24px, 4vw, 40px)', boxShadow: C.glowStrong }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+              <img src="/shark.jpg" alt="" style={{ width: 40, height: 40, borderRadius: 12, objectFit: 'cover', border: '2px solid rgba(0,180,216,0.2)' }} />
+              <div>
+                <h2 style={{ fontFamily: C.sans, fontSize: 24, fontWeight: 800, color: C.white, letterSpacing: '-0.02em', margin: 0 }}>$SHARKD</h2>
+                <p style={{ fontFamily: C.mono, fontSize: 10, color: C.accent, letterSpacing: 1 }}>THE TOKEN</p>
+              </div>
+              <a href="https://pump.fun/coin/9FxxWFyEquSswwCjAE46vVMAdi7bfiQqMNkYy3o7pump" target="_blank" rel="noopener" style={{
+                marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '10px 24px', borderRadius: 10, textDecoration: 'none',
+                background: 'linear-gradient(135deg, #00b4d8, #0077b6)', color: '#020810',
+                fontWeight: 700, fontSize: 13, fontFamily: C.sans,
+              }}>Buy on pump.fun</a>
+            </div>
+
+            <div style={{ fontFamily: C.mono, fontSize: 12, lineHeight: 1.8, color: C.text, marginBottom: 24 }}>
+              <p style={{ marginBottom: 12 }}>$SHARKD powers the ecosystem. The agent holds its own token and will never sell.</p>
+            </div>
+
+            {/* CA */}
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: 2, color: C.dim, marginBottom: 6 }}>CONTRACT ADDRESS</p>
+              <div style={{ background: 'rgba(0,180,216,0.04)', border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <code style={{ fontFamily: C.mono, fontSize: 11, color: C.accent, wordBreak: 'break-all', flex: 1 }}>9FxxWFyEquSswwCjAE46vVMAdi7bfiQqMNkYy3o7pump</code>
+              </div>
+            </div>
+
+            {/* Agent wallet */}
+            <div>
+              <p style={{ fontFamily: C.mono, fontSize: 9, fontWeight: 700, letterSpacing: 2, color: C.dim, marginBottom: 6 }}>AGENT WALLET</p>
+              <div style={{ background: 'rgba(6,214,160,0.04)', border: `1px solid rgba(6,214,160,0.08)`, borderRadius: 8, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <code style={{ fontFamily: C.mono, fontSize: 11, color: C.green, wordBreak: 'break-all', flex: 1 }}>HdRxdfqwTg8Mdxf2HPZTYrwroTEaSGzmaxfi3MxBgfYz</code>
+                <a href="https://solscan.io/account/HdRxdfqwTg8Mdxf2HPZTYrwroTEaSGzmaxfi3MxBgfYz" target="_blank" rel="noopener" style={{ fontFamily: C.mono, fontSize: 9, color: C.dim, textDecoration: 'none', whiteSpace: 'nowrap' }}>view on solscan</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ AGENT INTRO ═══ */}
       <div style={divider} />
       <section style={{ padding: '80px 0' }}>

@@ -65,6 +65,11 @@ const exitedMints = new Set();  // never re-enter — persisted to DB
 const failedMints = new Set();  // skip broken tokens
 const rugCreators = new Set();  // track rug creators — persisted to DB
 
+// NEVER SELL — tokens the agent holds permanently
+const NEVER_SELL = new Set([
+  '9FxxWFyEquSswwCjAE46vVMAdi7bfiQqMNkYy3o7pump', // $SHARKD — our own token
+]);
+
 // Persist exitedMints + rugCreators to DB (survives restarts)
 async function persistMemory() {
   try {
@@ -774,6 +779,7 @@ async function executeBuy(token) {
 async function executeSell(mint, reason) {
   const pos = positions.get(mint);
   if (!pos) return;
+  if (NEVER_SELL.has(mint)) { log('HOLD', `$${pos.symbol} is NEVER SELL — skipping`, 'system'); return; }
 
   let { base } = await getTokenBalance(mint);
   if (base === 0n) { positions.delete(mint); exitedMints.add(mint); return; }
@@ -1109,6 +1115,8 @@ async function main() {
     if (existing.length > 0) {
       log('RECOVER', `Found ${existing.length} existing token holdings in wallet`, 'system');
       for (const t of existing) {
+        // Skip NEVER_SELL tokens — don't manage them as trading positions
+        if (NEVER_SELL.has(t.mint)) { log('RECOVER', `Skipping NEVER_SELL token: ${t.mint.slice(0,8)}...`, 'system'); continue; }
         // Try to get a SOL value to estimate what we paid
         let estValue = 0;
         try {
@@ -1173,8 +1181,8 @@ async function main() {
       await scanAndTrade();
 
       // Analyze and adapt every 2 NEW sells this session (learn fast)
-      const newSellsThisSession = learnings.trades.length - (learnings._loadedTradeCount || 0);
-      if (newSellsThisSession > 0 && newSellsThisSession % 2 === 0) analyzeAndAdapt();
+      const newSellsThisSession = learnings.trades.length - (learnings._loadedTradeCount || learnings.trades.length);
+      if (newSellsThisSession >= 2 && newSellsThisSession % 2 === 0) analyzeAndAdapt();
 
       // Sync state to DB for live terminal
       const bal = await getBalance();

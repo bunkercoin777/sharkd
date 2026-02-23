@@ -201,9 +201,29 @@ const SOUL_POOL = {
   ],
 };
 
+const recentTexts = new Set(); // track posted texts to avoid duplicates
+
 function composePost(topicData, style) {
   const pool = SOUL_POOL[style] || SOUL_POOL.musing;
-  return pool[Math.floor(Math.random() * pool.length)];
+  // Shuffle and find one we haven't posted recently
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  for (const text of shuffled) {
+    if (!recentTexts.has(text)) {
+      recentTexts.add(text);
+      // Only remember last 40 to eventually allow repeats
+      if (recentTexts.size > 40) {
+        const first = recentTexts.values().next().value;
+        recentTexts.delete(first);
+      }
+      return text;
+    }
+  }
+  // All used in this style — try another style
+  const fallbackStyle = Object.keys(SOUL_POOL).find(s => s !== style);
+  const fb = SOUL_POOL[fallbackStyle];
+  const pick = fb[Math.floor(Math.random() * fb.length)];
+  recentTexts.add(pick);
+  return pick;
 }
 
 // ── Engagement Tracking ──

@@ -108,7 +108,7 @@ export default function Home() {
             <p style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: 3, color: C.accent, marginBottom: 14 }}>HOW IT WORKS</p>
             <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: C.white, letterSpacing: '-0.02em' }}>Three layers. One edge.</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div className="three-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
             {[
               { icon: '💬', num: '01', label: 'Conversational', title: 'Talk to it.', desc: 'Lives in Telegram. No dashboards. Text your agent like a friend — "go hunt", "be careful", "what are you holding". It understands you.', color: C.accent },
               { icon: '🧠', num: '02', label: 'Skill-powered', title: 'Teach it.', desc: 'Install modular trading skills from a marketplace. Each skill is proven on mainnet with verifiable performance. Skills auto-update after every trade.', color: C.purple },
@@ -144,7 +144,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 800, margin: '0 auto' }}>
+          <div className="demo-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 800, margin: '0 auto' }}>
             {/* Demo chat */}
             <div style={{
               background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14,
@@ -242,7 +242,7 @@ export default function Home() {
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div className="three-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             {[
               { name: 'Narrative Detection', tag: 'SCANNER', tagColor: C.accent, desc: 'Finds trending keywords across 400+ tokens. Meta detection with score boosting. Thresholds adjust based on meta success rate.', stat: '+18%', statLabel: 'avg meta trades', updates: 'v2.4 — 312 updates' },
               { name: 'Holder Analysis', tag: 'FILTER', tagColor: C.red, desc: 'Top wallet concentration check via Solana RPC. Auto-rejects >50% single wallet. Rejection threshold tightens with each rug detected.', stat: '0 rugs', statLabel: 'with skill active', updates: 'v1.8 — 89 updates' },
@@ -283,7 +283,7 @@ export default function Home() {
       <div style={divider} />
       <section style={sectionPad}>
         <div style={wrap}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
+          <div className="two-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
             {/* Dev Locks */}
             <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, padding: 36 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
@@ -331,7 +331,7 @@ export default function Home() {
       {/* ═══ STATS ═══ */}
       <div style={divider} />
       <section style={{ padding: '64px 0' }}>
-        <div style={{ ...wrap, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+        <div className="four-col" style={{ ...wrap, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
           {[
             { val: '72+', label: 'Mainnet trades', sub: 'Real SOL, real results' },
             { val: '7', label: 'Proven skills', sub: 'Self-updating after each trade' },
@@ -353,7 +353,7 @@ export default function Home() {
       {/* ═══ SDK ═══ */}
       <div style={divider} />
       <section style={sectionPad}>
-        <div style={{ ...wrap, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
+        <div className="sdk-grid" style={{ ...wrap, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
           <div style={{
             background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14,
             overflow: 'hidden', boxShadow: '0 16px 64px rgba(0,0,0,0.3)',

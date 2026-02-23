@@ -46,7 +46,7 @@ export default function Marketplace() {
 
       <section style={{ maxWidth: 1060, margin: '0 auto', padding: '0 clamp(20px,4vw,40px) 100px' }}>
         {/* Grid — 3 columns, consistent */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+        <div className="three-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
           {SKILLS.map((skill, i) => (
             <div key={skill.name} style={{
               background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14,

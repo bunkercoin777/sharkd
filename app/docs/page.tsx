@@ -1,6 +1,15 @@
 import { Nav } from '../components/Nav';
 import { Footer } from '../components/Footer';
 
+const C = {
+  bg: '#060610', surface: '#0b0b18', border: 'rgba(255,255,255,0.05)',
+  accent: '#3b82f6', green: '#22c55e', red: '#ef4444', amber: '#f59e0b',
+  purple: '#a855f7', cyan: '#06b6d4', white: '#f0f2f8', text: '#94a3b8',
+  dim: '#475569', dimmer: '#334155',
+  mono: "'JetBrains Mono', 'SF Mono', monospace",
+  sans: "'Inter', system-ui, sans-serif",
+};
+
 const sections = [
   {
     id: 'quickstart',
@@ -41,9 +50,9 @@ const sections = [
     blocks: [
       { type: 'text', content: 'Three preset risk profiles. Switch between them mid-conversation.' },
       { type: 'table', content: [
-        { mode: 'Cautious', sizing: '0.05–0.20 SOL', tp: '+10%', sl: '-5%', score: '6+' },
-        { mode: 'Balanced', sizing: '0.10–0.50 SOL', tp: '+15%', sl: '-8%', score: '5+' },
-        { mode: 'Degen', sizing: '0.10–1.00 SOL', tp: '+20%', sl: '-12%', score: '4+' },
+        { mode: 'Cautious', sizing: '0.05-0.20 SOL', tp: '+10%', sl: '-5%', score: '6+' },
+        { mode: 'Balanced', sizing: '0.10-0.50 SOL', tp: '+15%', sl: '-8%', score: '5+' },
+        { mode: 'Degen', sizing: '0.10-1.00 SOL', tp: '+20%', sl: '-12%', score: '4+' },
       ]},
       { type: 'text', content: 'Position sizing scales within these ranges based on your agent\'s win rate. More wins → bigger positions, automatically.' },
     ]
@@ -101,9 +110,9 @@ pre-sell   → Adjust sell logic, override stop loss / take profit` },
     title: 'Dev Locks',
     blocks: [
       { type: 'text', content: 'Smart contracts that cryptographically lock developer token allocations for a verified period. Visible and verifiable by anyone on-chain.' },
-      { type: 'code', title: 'Lock options', content: `🔒   7 days   — Basic trust signal
-🔒🔒  30 days  — Strong commitment  
-🔒🔒🔒 90 days  — Maximum trust
+      { type: 'code', title: 'Lock options', content: `[LOCK]   7 days   — Basic trust signal
+[LOCK]   30 days  — Strong commitment  
+[LOCK]   90 days  — Maximum trust
 
 Vesting: Linear unlock over the period
          (1% per day over 100 days)
@@ -132,19 +141,18 @@ Rewards paid in SOL, not tokens.` },
 
 export default function Docs() {
   return (
-    <>
+    <div style={{ background: C.bg, minHeight: '100vh' }}>
       <Nav />
 
-      <div className="max-w-[1100px] mx-auto px-6 pt-32 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-12 grid-mobile-1">
+      <div style={{ maxWidth: 1060, margin: '0 auto', padding: '140px clamp(20px, 4vw, 40px) 40px' }}>
+        <div className="docs-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 48 }}>
+
           {/* Sidebar */}
-          <aside className="hide-mobile">
-            <div className="sticky top-24 flex flex-col gap-1">
-              <p className="font-mono text-[10px] tracking-[0.15em] text-[#388eff] font-semibold mb-3">DOCUMENTATION</p>
+          <aside className="docs-sidebar">
+            <div style={{ position: 'sticky', top: 100, display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <p style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 700, letterSpacing: 3, color: C.accent, marginBottom: 14 }}>DOCUMENTATION</p>
               {sections.map(s => (
-                <a key={s.id} href={`#${s.id}`}
-                  className="font-mono text-[12px] py-1.5 no-underline transition-colors duration-200"
-                  style={{ color: '#4a5568' }}>
+                <a key={s.id} href={`#${s.id}`} style={{ fontFamily: C.mono, fontSize: 12, padding: '6px 0', textDecoration: 'none', color: C.dim, transition: 'color 0.2s' }}>
                   {s.title}
                 </a>
               ))}
@@ -152,32 +160,32 @@ export default function Docs() {
           </aside>
 
           {/* Content */}
-          <main className="flex flex-col gap-16 pb-32">
+          <main style={{ display: 'flex', flexDirection: 'column', gap: 64, paddingBottom: 120 }}>
             <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white mb-4">Documentation</h1>
-              <p style={{ color: '#6b7394' }}>Everything you need to deploy, configure, and extend your trading agent.</p>
+              <h1 style={{ fontFamily: C.sans, fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 900, letterSpacing: '-0.03em', color: C.white, marginBottom: 12 }}>Documentation</h1>
+              <p style={{ fontSize: 15, color: C.dim, lineHeight: 1.6 }}>Everything you need to deploy, configure, and extend your trading agent.</p>
             </div>
 
             {sections.map(section => (
-              <section key={section.id} id={section.id} className="scroll-mt-24">
-                <h2 className="text-2xl font-bold text-white mb-6 tracking-tight">{section.title}</h2>
-                <div className="flex flex-col gap-6">
+              <section key={section.id} id={section.id} style={{ scrollMarginTop: 100 }}>
+                <h2 style={{ fontFamily: C.sans, fontSize: 24, fontWeight: 800, color: C.white, marginBottom: 24, letterSpacing: '-0.01em' }}>{section.title}</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                   {section.blocks.map((block, i) => {
                     if (block.type === 'text') {
-                      return <p key={i} className="text-[15px] leading-relaxed" style={{ color: '#8b93a8' }}>{block.content as string}</p>;
+                      return <p key={i} style={{ fontSize: 15, lineHeight: 1.7, color: C.text }}>{block.content as string}</p>;
                     }
                     if (block.type === 'code') {
                       const b = block as { type: string; title: string; content: string };
                       return (
-                        <div key={i} className="terminal">
-                          <div className="terminal-header">
-                            <div className="terminal-dot" style={{ background: '#ff5f57' }} />
-                            <div className="terminal-dot" style={{ background: '#febc2e' }} />
-                            <div className="terminal-dot" style={{ background: '#28c840' }} />
-                            <span className="font-mono text-[11px] ml-3" style={{ color: '#4a4a5a' }}>{b.title}</span>
+                        <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 16px', background: 'rgba(255,255,255,0.015)', borderBottom: `1px solid ${C.border}` }}>
+                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
+                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
+                            <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
+                            <span style={{ fontFamily: C.mono, fontSize: 11, marginLeft: 8, color: C.dimmer }}>{b.title}</span>
                           </div>
-                          <div className="terminal-body">
-                            <pre className="text-[12px] leading-relaxed whitespace-pre-wrap" style={{ color: '#8b93a8' }}>{b.content}</pre>
+                          <div style={{ padding: '16px 20px' }}>
+                            <pre style={{ fontFamily: C.mono, fontSize: 12, lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: 0, color: C.text }}>{b.content}</pre>
                           </div>
                         </div>
                       );
@@ -185,16 +193,17 @@ export default function Docs() {
                     if (block.type === 'steps') {
                       const steps = block.content as Array<{ step: string; title: string; desc: string }>;
                       return (
-                        <div key={i} className="flex flex-col gap-4">
+                        <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                           {steps.map(s => (
-                            <div key={s.step} className="card p-5 flex gap-5">
-                              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 font-mono text-sm font-bold"
-                                style={{ background: 'rgba(56,142,255,0.08)', color: '#388eff' }}>
-                                {s.step}
-                              </div>
+                            <div key={s.step} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, padding: 20, display: 'flex', gap: 16 }}>
+                              <div style={{
+                                width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                                background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.12)',
+                                fontFamily: C.mono, fontSize: 13, fontWeight: 700, color: C.accent,
+                              }}>{s.step}</div>
                               <div>
-                                <h4 className="text-[14px] font-semibold text-white mb-1">{s.title}</h4>
-                                <p className="text-[13px]" style={{ color: '#6b7394' }}>{s.desc}</p>
+                                <h4 style={{ fontSize: 14, fontWeight: 700, color: C.white, marginBottom: 4 }}>{s.title}</h4>
+                                <p style={{ fontSize: 13, color: C.dim, lineHeight: 1.6 }}>{s.desc}</p>
                               </div>
                             </div>
                           ))}
@@ -204,11 +213,11 @@ export default function Docs() {
                     if (block.type === 'commands') {
                       const cmds = block.content as Array<{ cmd: string; desc: string }>;
                       return (
-                        <div key={i} className="flex flex-col gap-2">
+                        <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                           {cmds.map(c => (
-                            <div key={c.cmd} className="flex items-start gap-4 py-2" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                              <code className="font-mono text-[12px] text-[#7bb5ff] flex-shrink-0 min-w-[240px]">{c.cmd}</code>
-                              <span className="text-[13px]" style={{ color: '#6b7394' }}>{c.desc}</span>
+                            <div key={c.cmd} style={{ display: 'flex', alignItems: 'flex-start', gap: 16, padding: '10px 0', borderBottom: `1px solid ${C.border}` }}>
+                              <code style={{ fontFamily: C.mono, fontSize: 12, color: '#7bb5ff', flexShrink: 0, minWidth: 240 }}>{c.cmd}</code>
+                              <span style={{ fontSize: 13, color: C.dim, lineHeight: 1.5 }}>{c.desc}</span>
                             </div>
                           ))}
                         </div>
@@ -217,17 +226,19 @@ export default function Docs() {
                     if (block.type === 'table') {
                       const rows = block.content as Array<{ mode: string; sizing: string; tp: string; sl: string; score: string }>;
                       return (
-                        <div key={i} className="terminal">
-                          <div className="terminal-body">
-                            <div className="grid grid-cols-5 gap-4 font-mono text-[11px] pb-3 mb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', color: '#4a5568' }}>
+                        <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
+                          <div style={{ padding: '16px 20px' }}>
+                            {/* Header */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 16, fontFamily: C.mono, fontSize: 11, color: C.dimmer, paddingBottom: 12, marginBottom: 12, borderBottom: `1px solid ${C.border}` }}>
                               <span>MODE</span><span>SIZING</span><span>TP</span><span>SL</span><span>MIN SCORE</span>
                             </div>
+                            {/* Rows */}
                             {rows.map(r => (
-                              <div key={r.mode} className="grid grid-cols-5 gap-4 font-mono text-[12px] py-2" style={{ color: '#8b93a8' }}>
-                                <span className="text-white font-medium">{r.mode}</span>
+                              <div key={r.mode} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 16, fontFamily: C.mono, fontSize: 12, color: C.text, padding: '8px 0' }}>
+                                <span style={{ color: C.white, fontWeight: 600 }}>{r.mode}</span>
                                 <span>{r.sizing}</span>
-                                <span style={{ color: '#22c55e' }}>{r.tp}</span>
-                                <span style={{ color: '#ff4d6a' }}>{r.sl}</span>
+                                <span style={{ color: C.green }}>{r.tp}</span>
+                                <span style={{ color: C.red }}>{r.sl}</span>
                                 <span>{r.score}</span>
                               </div>
                             ))}
@@ -245,6 +256,6 @@ export default function Docs() {
       </div>
 
       <Footer />
-    </>
+    </div>
   );
 }

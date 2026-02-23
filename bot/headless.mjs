@@ -54,7 +54,7 @@ const BOND_MIN_REPLIES = 8;
 
 const MAX_POSITIONS = 3;       // Allow multiple — hold slow movers while hunting new ones
 const CYCLE_MS = 20_000;       // scan every 20s — faster cycles
-const MIN_SCORE = 5;
+const MIN_SCORE = 7;  // raised from 5 — be pickier, 37% win rate means we're not selective enough
 
 // ══════════════════════════════════════════════════════════════
 // STATE
@@ -72,6 +72,10 @@ async function persistMemory() {
     const mints = [...exitedMints].slice(-500);
     await updateState('exitedMints', mints);
     await updateState('rugCreators', [...rugCreators]);
+    // Persist cumulative counters so they survive restarts
+    await updateState('tradeCounters', { wins, losses, totalPnl });
+    // Persist recent trade learnings for analysis continuity
+    await updateState('tradeHistory', learnings.trades.slice(-100));
   } catch {}
 }
 
@@ -87,6 +91,35 @@ async function loadMemory() {
       rugs.forEach(r => rugCreators.add(r));
       console.log(`[MEMORY] Loaded ${rugs.length} blacklisted creators`);
     }
+    // Load learned rules so they persist across restarts
+    const savedLearnings = await getState('learnings');
+    if (savedLearnings && savedLearnings.rules) {
+      Object.assign(learnings.rules, savedLearnings.rules);
+      console.log(`[MEMORY] Loaded learned rules: maxTop1=${learnings.rules.maxTop1Pct}% maxTop5=${learnings.rules.maxTop5Pct}% minHolders=${learnings.rules.minHolders} metaBoost=${learnings.rules.metaBoostMultiplier}`);
+    }
+    // Load cumulative win/loss counters
+    const savedCounters = await getState('tradeCounters');
+    if (savedCounters) {
+      wins = savedCounters.wins || 0;
+      losses = savedCounters.losses || 0;
+      totalPnl = savedCounters.totalPnl || 0;
+      console.log(`[MEMORY] Loaded counters: ${wins}W/${losses}L | PnL: ${totalPnl >= 0 ? '+' : ''}${totalPnl.toFixed(4)} SOL`);
+    }
+    // Load recent trade learnings for analysis continuity
+    const savedTradeHistory = await getState('tradeHistory');
+    if (Array.isArray(savedTradeHistory)) {
+      learnings.trades = savedTradeHistory.slice(-100); // keep last 100
+      // Rebuild aggregate stats from history
+      for (const t of learnings.trades) {
+        if (t.meta) { if (t.result === 'win') learnings.winsByMeta++; else learnings.lossesByMeta++; }
+        else { if (t.result === 'win') learnings.winsByNoMeta++; else learnings.lossesByNoMeta++; }
+        if (t.isBonding) { if (t.result === 'win') learnings.winsByBonding++; else learnings.lossesByBonding++; }
+        else { if (t.result === 'win') learnings.winsByGrad++; else learnings.lossesByGrad++; }
+        if (t.result === 'loss' && t.reason) learnings.lossByReason[t.reason] = (learnings.lossByReason[t.reason] || 0) + 1;
+      }
+      learnings._loadedTradeCount = learnings.trades.length;
+      console.log(`[MEMORY] Loaded ${learnings.trades.length} trade learnings for analysis`);
+    }
   } catch (e) {
     console.log(`[MEMORY] Load failed: ${e.message}`);
   }
@@ -101,12 +134,12 @@ const learnings = {
   // Per-trade outcome tracking
   trades: [],           // { symbol, score, meta, holdMin, pnlPct, reason, result, isBonding, mcap, replies, ageHours, top1Pct, top5Pct, holderCount }
 
-  // Discovered rules (adjustable thresholds)
+  // Discovered rules (adjustable thresholds) — defaults based on 229 trades of data
   rules: {
-    minMcap: 1000,            // updated from loss patterns
-    maxTop1Pct: 50,           // tightened when whales dump on us
-    maxTop5Pct: 70,           // tightened when concentrated holders dump
-    minHolders: 0,            // learned minimum holder count
+    minMcap: 5000,            // learned: sub-5K tokens are dust traps
+    maxTop1Pct: 30,           // learned: whales above 30% dump on us
+    maxTop5Pct: 55,           // learned: concentrated holders dump
+    minHolders: 8,            // learned: thin holder base = no liquidity
     minAge: 0,                // avoid tokens too young (minutes)
     maxAge: 360,              // avoid tokens too old (minutes)
     metaBoostMultiplier: 1.0, // adjusted based on meta trade performance
@@ -745,6 +778,14 @@ async function executeSell(mint, reason) {
   let { base } = await getTokenBalance(mint);
   if (base === 0n) { positions.delete(mint); exitedMints.add(mint); return; }
 
+  // ── GET PRE-SELL QUOTE for accurate PnL ──
+  let preSellSol = 0;
+  try {
+    const SOL = 'So11111111111111111111111111111111111111112';
+    const qr = await fetch(`https://lite-api.jup.ag/swap/v1/quote?inputMint=${mint}&outputMint=${SOL}&amount=${base.toString()}&slippageBps=1500`);
+    if (qr.ok) preSellSol = Number((await qr.json()).outAmount) / 1e9;
+  } catch {}
+
   // ── PERSISTENT SELL — keep trying until token balance is 0 ──
   const MAX_ROUNDS = 5;       // 5 rounds of 3 attempts each = 15 total attempts
   let confirmed = false;
@@ -792,16 +833,10 @@ async function executeSell(mint, reason) {
     return;
   }
 
-  // Calculate PnL
-  let currentSol = 0;
-  try {
-    const SOL = 'So11111111111111111111111111111111111111112';
-    const qr = await fetch(`https://lite-api.jup.ag/swap/v1/quote?inputMint=${mint}&outputMint=${SOL}&amount=${base.toString()}&slippageBps=1500`);
-    if (qr.ok) currentSol = Number((await qr.json()).outAmount) / 1e9;
-  } catch {}
-
+  // Calculate PnL using pre-sell quote (more accurate than post-sell)
+  const currentSol = preSellSol;
   const pnlSol = currentSol - pos.buySol;
-  const pnlPct = ((currentSol - pos.buySol) / pos.buySol) * 100;
+  const pnlPct = pos.buySol > 0 ? ((currentSol - pos.buySol) / pos.buySol) * 100 : 0;
   // Only count as win/loss if material (>1% move). Dust stale cuts are neutral.
   if (Math.abs(pnlPct) > 1) {
     if (pnlSol >= 0) wins++; else losses++;
@@ -1137,9 +1172,9 @@ async function main() {
       await checkPositions();
       await scanAndTrade();
 
-      // Analyze and adapt every 2 trades (learn fast)
-      const totalTrades = wins + losses;
-      if (totalTrades > 0 && totalTrades % 2 === 0 && learnings.trades.length >= 2) analyzeAndAdapt();
+      // Analyze and adapt every 2 NEW sells this session (learn fast)
+      const newSellsThisSession = learnings.trades.length - (learnings._loadedTradeCount || 0);
+      if (newSellsThisSession > 0 && newSellsThisSession % 2 === 0) analyzeAndAdapt();
 
       // Sync state to DB for live terminal
       const bal = await getBalance();

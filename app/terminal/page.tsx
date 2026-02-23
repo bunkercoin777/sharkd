@@ -93,7 +93,7 @@ export default function Terminal() {
     <div style={{ background: C.bg, minHeight: '100vh' }}>
       <Nav />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '100px clamp(16px, 3vw, 32px) 60px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '80px clamp(16px, 3vw, 32px) 40px' }}>
         {/* Header + Stats Bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -123,7 +123,7 @@ export default function Terminal() {
         {/* Main Grid: Feed left, Holdings + Skills right */}
         <div className="terminal-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 12, marginBottom: 16 }}>
           {/* Decision Feed — fixed height */}
-          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden', display: 'flex', flexDirection: 'column', height: 480 }}>
+          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)', maxHeight: 520, minHeight: 300 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '8px 14px', background: 'rgba(0,180,216,0.02)', borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ef476f' }} />
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ffd166' }} />
@@ -154,7 +154,7 @@ export default function Terminal() {
           </div>
 
           {/* Right panel — compact stack */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 480, overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 'calc(100vh - 200px)', maxHeight: 520, minHeight: 300, overflowY: 'auto' }}>
             {/* Holdings */}
             <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: 14 }}>
               <p style={{ fontFamily: C.mono, fontSize: 8, fontWeight: 700, letterSpacing: 2, color: C.amber, marginBottom: 8 }}>HOLDINGS</p>
@@ -209,7 +209,7 @@ export default function Terminal() {
             {trades.length > 0 && <span style={{ fontFamily: C.mono, fontSize: 8, color: C.dim }}>{trades.length} trades</span>}
           </div>
           {trades.length > 0 ? (
-            <div style={{ overflowX: 'auto', maxHeight: 300 }}>
+            <div style={{ overflowX: 'auto', maxHeight: 220 }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: `1px solid ${C.borderLit}`, position: 'sticky', top: 0, background: C.surface }}>
@@ -297,7 +297,7 @@ export default function Terminal() {
                     {[row.s, row.b, row.t, row.p, row.x].map((v, ci) => (
                       <td key={ci} style={{ textAlign: 'center', padding: '8px 12px', background: ci === 0 ? 'rgba(0,180,216,0.04)' : 'transparent' }}>
                         <span style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 700, color: v ? (ci === 0 ? C.accent : C.green) : C.dimmer }}>
-                          {v ? (ci === 0 ? '[ * ]' : '[ + ]') : '[   ]'}
+                          {v ? (ci === 0 ? '[ \u2713 ]' : '[ \u2713 ]') : '[ \u2014 ]'}
                         </span>
                       </td>
                     ))}

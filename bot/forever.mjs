@@ -7,9 +7,21 @@
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import { readFileSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BOT_SCRIPT = join(__dirname, 'headless.mjs');
+
+// Load .env.local if env vars aren't already set
+const envFile = join(__dirname, '..', '.env.local');
+try {
+  const lines = readFileSync(envFile, 'utf8').split('\n');
+  for (const line of lines) {
+    const m = line.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+  }
+  console.log('[FOREVER] Loaded .env.local');
+} catch {}
 
 const MIN_BACKOFF = 3_000;
 const MAX_BACKOFF = 60_000;

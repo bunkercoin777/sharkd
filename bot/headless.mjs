@@ -11,6 +11,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initDB, logThought, logTrade as dbLogTrade, updateState, logSkill as dbLogSkill, getState } from './db.mjs';
+import { discoverProfitableWallets, loadWallets, persistWallets, TRACKED_WALLETS } from './copy-tracker.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RPC = process.env.RPC_URL;
@@ -1082,6 +1083,7 @@ async function main() {
   await initDB();
   console.log('[DB] Connected to Neon PostgreSQL');
   await loadMemory();
+  await loadWallets();
 
   const bal = await getBalance();
   console.log(`Balance: ${bal.toFixed(4)} SOL`);
@@ -1170,6 +1172,7 @@ async function main() {
     if (Date.now() - startTime > MAX_RUNTIME_MS) {
       log('RESTART', `27min runtime reached. Persisting state and exiting for clean restart...`, 'system');
       await persistMemory();
+      await persistWallets();
       const bal = await getBalance();
       await syncState(bal);
       process.exit(0);
@@ -1183,6 +1186,21 @@ async function main() {
       // Analyze and adapt every 2 NEW sells this session (learn fast)
       const newSellsThisSession = learnings.trades.length - (learnings._loadedTradeCount || learnings.trades.length);
       if (newSellsThisSession >= 2 && newSellsThisSession % 2 === 0) analyzeAndAdapt();
+
+      // Discover profitable wallets every 10 cycles
+      if (cycle % 10 === 0) {
+        try {
+          await discoverProfitableWallets();
+          if (TRACKED_WALLETS.size > 0) {
+            log('COPY', `Tracking ${TRACKED_WALLETS.size} wallets for copy-trade signals`, 'learn');
+          }
+        } catch {}
+      }
+
+      // Persist copy-trade wallets every 25 cycles
+      if (cycle % 25 === 0 && TRACKED_WALLETS.size > 0) {
+        await persistWallets();
+      }
 
       // Sync state to DB for live terminal
       const bal = await getBalance();

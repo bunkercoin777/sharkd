@@ -1,0 +1,30 @@
+{
+  "name": "sharkd",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "bot": "node --env-file=.env.local bot/index.mjs",
+    "bot:dev": "node --watch --env-file=.env.local bot/index.mjs"
+  },
+  "dependencies": {
+    "next": "^15.3.9",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "grammy": "^1.35.0",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0",
+    "@neondatabase/serverless": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0"
+  }
+}

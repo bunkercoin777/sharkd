@@ -1,0 +1,14 @@
+{
+  "trades": [
+    {
+      "type": "buy",
+      "token": "cleveculer",
+      "amount": 0.05,
+      "score": 8,
+      "meta": "cleveculer",
+      "time": 1771820283102
+    }
+  ],
+  "lastTrade": 1771820283102,
+  "lastPost": null
+}
